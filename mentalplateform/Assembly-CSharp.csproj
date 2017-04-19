@@ -45,6 +45,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CogScript.cs" />
+     <Compile Include="Assets\CognitivActionSmooth.cs" />
+     <Compile Include="Assets\EdkDll.cs" />
+     <Compile Include="Assets\EmoEngine.cs" />
+     <Compile Include="Assets\EmoEngineInst.cs" />
+     <Compile Include="Assets\EmoFacialExpression.cs" />
+     <Compile Include="Assets\EmoGyroData.cs" />
+     <Compile Include="Assets\EmoMentalCommand.cs" />
+     <Compile Include="Assets\EmoState.cs" />
+     <Compile Include="Assets\EmoUserManagement.cs" />
+     <Compile Include="Assets\EmotivCloudClient.cs" />
+     <Compile Include="Assets\LANBroadcastService.cs" />
+     <Compile Include="Assets\LabelDraw.cs" />
      <Compile Include="Assets\PlayerScript.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
