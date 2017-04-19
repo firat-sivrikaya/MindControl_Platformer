@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+	int HP;
 	// Use this for initialization
 	void Start () {
 		
