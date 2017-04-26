@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space Shooter OOP", "Assembly-CSharp.csproj", "{7BBB4C6B-BF87-96AF-EE32-8DF76499526E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Space Shooter OOP", "Assembly-CSharp-Editor.csproj", "{06FA92F3-D99F-E860-6190-DC20A5F9546D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7BBB4C6B-BF87-96AF-EE32-8DF76499526E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7BBB4C6B-BF87-96AF-EE32-8DF76499526E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7BBB4C6B-BF87-96AF-EE32-8DF76499526E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7BBB4C6B-BF87-96AF-EE32-8DF76499526E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06FA92F3-D99F-E860-6190-DC20A5F9546D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06FA92F3-D99F-E860-6190-DC20A5F9546D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06FA92F3-D99F-E860-6190-DC20A5F9546D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06FA92F3-D99F-E860-6190-DC20A5F9546D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Assembly-CSharp.csproj
+	EndGlobalSection
+EndGlobal
