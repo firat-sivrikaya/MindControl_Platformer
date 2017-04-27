@@ -58,6 +58,59 @@ public class Controller : MonoBehaviour
         }
 
         //Hazard control
+        //checker les plates formes mouvantes
+        for (int i = 0; i < model.movingPlatform.Count; i++)
+        {
+            if (model.movingPlatform[i]._direction == 0)
+            {
+
+                if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.x <= model.movingPlatform[i].origin_x + model.movingPlatform[i]._amplitude)
+                {
+                    print("moving right");
+                    model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.01f, 0.0f, 0.0f));
+                    //  model.movingPlatform[i].position += new Vector3(0.1f, 0, 0);
+                }
+                //if platform goes to the right and is at the good place or too far, invert direction
+                else if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.x >= model.movingPlatform[i].origin_x + model.movingPlatform[i]._amplitude)
+                {
+                    print("stoping!!!");
+                    model.movingPlatform[i].right = false;
+                }
+                else if (model.movingPlatform[i].right == false && model.movingPlatform[i].rigidbody.position.x >= model.movingPlatform[i].origin_x)
+                {
+                    print("moving left");
+                    model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(-0.01f, 0.0f, 0.0f));
+                }
+                else if (model.movingPlatform[i].rigidbody.position.x <= model.movingPlatform[i].origin_x)
+                {
+                    model.movingPlatform[i].right = true;
+                }
+            }
+            else
+            {
+                if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.z <= model.movingPlatform[i].origin_z + model.movingPlatform[i]._amplitude)
+                {
+                    print("moving right");
+                    model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, 0.01f));
+                }
+                //if platform goes to the right and is at the good place or too far, invert direction
+                else if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.z >= model.movingPlatform[i].origin_z + model.movingPlatform[i]._amplitude)
+                {
+                    print("stoping!!!");
+                    model.movingPlatform[i].right = false;
+                }
+                else if (model.movingPlatform[i].right == false && model.movingPlatform[i].rigidbody.position.z >= model.movingPlatform[i].origin_z)
+                {
+                    print("moving left");
+                    model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, -0.01f));
+                }
+                else if (model.movingPlatform[i].rigidbody.position.z <= model.movingPlatform[i].origin_z)
+                {
+                    model.movingPlatform[i].right = true;
+                }
+            }
+        }
+
         for (int i = 0; i < model.hazards.Count; i++)
         {
             if (model.hazards[i].GetCollider() != null)
@@ -333,7 +386,7 @@ public class Controller : MonoBehaviour
 			view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
 		}
 
-		model.AddMovingPlatform (1, 1, 7, 5, 0, 0);
+		model.AddMovingPlatform (1, 1, 0, 7, 0, 2);
 
 		for ( int i = 0 ; i < model.movingPlatform.Count ; i++ )
 		{

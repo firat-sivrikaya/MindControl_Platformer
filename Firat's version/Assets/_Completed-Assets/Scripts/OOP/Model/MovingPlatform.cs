@@ -9,14 +9,15 @@ namespace Model
 {
 	public class MovingPlatform : Platform 
 	{
-		int x, z;
+        public bool right = true;
+		public int origin_x, origin_z;
 		public int _direction = 0; //0 = horizontal, 1 = vertical, define the direction of the movment
-		public int _amplitude = 0; //define the amplitude of the movment
+		public int _amplitude; //define the amplitude of the movment
 		protected MovingPlatform() {}
 		public MovingPlatform(int length, int width, int x, int z, int direction, int amplitude)
 		{
 			LoadPrefab("MovingPlatform");
-			this.x = x;
+			origin_x = x;
 			this.z = z;
 			//position = new Vector3(x, 0, z);
 			SetPosition(x, z);
