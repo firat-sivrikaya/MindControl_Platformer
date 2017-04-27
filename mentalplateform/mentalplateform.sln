@@ -1,9 +1,9 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2008
-
-Project("{C8D5A3B7-E5A5-A441-EC05-4DDF461FD9D3}") = "mentalplateform", "Assembly-CSharp.csproj", "{2C4877D7-F074-F2F3-A4E6-F026466DD736}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mentalplateform", "Assembly-CSharp.csproj", "{2C4877D7-F074-F2F3-A4E6-F026466DD736}"
 EndProject
-Project("{C8D5A3B7-E5A5-A441-EC05-4DDF461FD9D3}") = "mentalplateform", "Assembly-UnityScript.unityproj", "{8D33173D-B07C-3322-20B2-E68767A07A02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mentalplateform", "Assembly-UnityScript.unityproj", "{8D33173D-B07C-3322-20B2-E68767A07A02}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

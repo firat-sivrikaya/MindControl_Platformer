@@ -26,22 +26,17 @@ public class Controller : MonoBehaviour
         model = new Model.Model();
         view = new View.View();
 
+
         view.AddPlayerSpaceship(model.player.spaceship.gameObject.transform);
         print(model.player.spaceship.gameObject.transform);
-        model.AddPlatform(5, -1);
-        model.AddPlatform(3, -1);
-        model.AddPlatform(1, -1);
-
-        for ( int i = 0 ; i < model.platform.Count ; i++ )
-        {
-            view.AddPlatform(model.platform[i].gameObject.transform);
-        }
+        
+		BuildLevel ();
 
         //view.AddPlatform(model.platform.gameObject.transform);   
         removeHazards = new List<int>();
         //view.ShootEvent += ShootEvent;
         view.OnMove += MoveEvent;
-
+        view.OnJump += JumpEvent;
         model.gameOver = false;
         view.restartText.gUIText.text = "";
         view.gameOverText.gUIText.text = "";
@@ -195,9 +190,9 @@ public class Controller : MonoBehaviour
                 model.player.spaceship.cannon.DestroyBolt(j);
         }
 
-        
+       /* 
         if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
-            print("YEY!");
+            print("YEY!");*/
 
 
         if (!model.gameOver)
@@ -284,6 +279,7 @@ public class Controller : MonoBehaviour
         view.OnRestart += RestartEvent;
         view.OnShoot -= ShootEvent;
         view.OnMove -= MoveEvent;
+        view.OnJump -= JumpEvent;
         view.gameOverText.gUIText.text = "Game Over!";
         model.gameOver = true;
     }
@@ -299,7 +295,11 @@ public class Controller : MonoBehaviour
     private void MoveEvent(object sender, View.PlayerInput e)
     {
         //Update player position by input
-        model.player.spaceship.rigidbody.velocity = e.position * 10;
+        //print("Player moved");
+        //model.player.spaceship.rigidbody.velocity = e.position * 10;
+        model.player.spaceship.position.y = 0;
+        model.player.spaceship.rigidbody.velocity = new Vector3(e.position.x * 3, 0, 0);
+        //model.player.spaceship.rigidbody.useGravity = true;
     }
 
     private void RestartEvent(object sender, EventArgs e)
@@ -308,9 +308,64 @@ public class Controller : MonoBehaviour
         view.OnRestart -= RestartEvent;
         view.OnShoot += ShootEvent;
         view.OnMove += MoveEvent;
+        view.OnJump += JumpEvent;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+	private void BuildLevel ()
+	{
+		BuildLevel1 ();
+	}
+
+	private void BuildLevel1()
+	{
+		model.AddPlatform (10, 1, 0, -2);
+        model.AddPlatform(1, 20, -7, 0);
+		for ( int i = 0 ; i < model.platform.Count ; i++ )
+		{
+			view.AddPlatform(model.platform[i].gameObject.transform);
+		}
+
+		model.AddTeleportPlatform (1, 1, 5, 3, 78, 65);
+
+		for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
+		{
+			view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
+		}
+
+		model.AddMovingPlatform (1, 1, 7, 5, 0, 0);
+
+		for ( int i = 0 ; i < model.movingPlatform.Count ; i++ )
+		{
+			view.AddMovingPlatform(model.movingPlatform[i].gameObject.transform);
+		}
+
+		model.AddMagicPlatform (1, 1, 5, 5, 0, 0);
+
+		for ( int i = 0 ; i < model.magicPlatform.Count ; i++ )
+		{
+			view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
+		}
+		
+	}
+
+    private void JumpEvent(object sender, EventArgs e)
+    {
+        if (!view.jumpTriggered)
+        {
+            //model.player.spaceship.rigidbody.AddRelativeForce(0, 0, -10, ForceMode.Acceleration);
+            view.jumpTriggered = true;
+        }
+
+        print("Player jumped");
+        if (view.jumping)
+        {
+            view.jumping = false;
+            model.player.spaceship.rigidbody.AddForce(0, 0, 5, ForceMode.Impulse);
+        }
+
+        //playerSpaceship.gameObject.GetComponent<Rigidbody>().AddForce(0, 50, 0, ForceMode.Impulse);
+    }
     /*private void UpdateView(GameObject model, GameObject view)
     {
         view.transform.position = model.transform.position;
