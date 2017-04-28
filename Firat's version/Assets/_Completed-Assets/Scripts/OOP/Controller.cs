@@ -162,6 +162,21 @@ public class Controller : MonoBehaviour
                 model.player.spaceship.rigidbody.transform.parent = null;
             }
         }
+
+        //Check if the player is grounded on a magic platform
+        for (int i = 0 ; i < model.magicPlatform.Count; i++ )
+        {
+            if( model.player.spaceship.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
+            {
+                view.grounded = true;
+                model.player.spaceship.rigidbody.transform.parent = model.magicPlatform[i].rigidbody.transform;
+            }
+            if( model.player.spaceship.CollisionDetection(model.magicPlatform[i].collider, NOT_OPERATOR))
+            {
+                model.player.spaceship.rigidbody.transform.parent = null;
+            }            
+        }
+
         //Check if player is grounded on a teleport platform
         for (int i = 0; i < model.magicPlatform.Count; i++)
         {
