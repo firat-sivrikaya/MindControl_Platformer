@@ -127,6 +127,7 @@ public class Controller : MonoBehaviour
                 model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
             {
                 print("Beam me up Scotty");
+                //how to put the cam in the center of the new level?
                 model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
                 Camera.main.transform.position = new Vector3(model.teleportPlatform[i].destination_x, 20, model.teleportPlatform[i].destination_z);
               //  GetComponent<Camera>().transform.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
@@ -587,8 +588,10 @@ public class Controller : MonoBehaviour
 	{
         //level frame
         Camera.main.transform.position = new Vector3(10, 15, 10);
-        Camera.main.orthographicSize = 13;
+        Camera.main.orthographicSize = 20;
 
+        //min x= -2 max x =20
+        //min z = -2 max z = 16
         //framework for level
         model.AddPlatform (21, 1, 9, -2);//floor
         model.AddPlatform(1, 19, -2, 7);//left wall
@@ -609,7 +612,7 @@ public class Controller : MonoBehaviour
 			view.AddPlatform(model.platform[i].gameObject.transform);
 		}
 
-		model.AddTeleportPlatform (1, 1, 18, 13, 59, 57);
+		model.AddTeleportPlatform (1, 1, 5, 2, 50, 60);
 
 		for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
 		{
@@ -617,7 +620,7 @@ public class Controller : MonoBehaviour
 		}
 
 	//	model.AddMovingPlatform (1, 1, 0, 7, 1, 2);
-
+    /*
 		for ( int i = 0 ; i < model.movingPlatform.Count ; i++ )
 		{
 			view.AddMovingPlatform(model.movingPlatform[i].gameObject.transform);
@@ -634,7 +637,7 @@ public class Controller : MonoBehaviour
         for (int i = 0; i < model.magicPlatform.Count; i++)
         {
             view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
-        }
+        }*/
 
     }
 
@@ -643,22 +646,56 @@ public class Controller : MonoBehaviour
         //Camera.main.transform.position = new Vector3(10, 15, 10);
         //Camera.main.orthographicSize = 13;
 
+        //min x = 48 max x = 70
+        //min z = 48 max z = 66
+
         //framework for level
-        model.AddPlatform(21, 1, 59, 48);
-        model.AddPlatform(1, 19, 48, 57);
-        model.AddPlatform(1, 19, 70, 57);
-        model.AddPlatform(21, 1, 59, 66);
+        model.AddPlatform(21, 1, 59, 48);//ground
+        model.AddPlatform(1, 19, 48, 57);//left wall
+        model.AddPlatform(1, 19, 70, 57);//right wall
+        model.AddPlatform(21, 1, 59, 66);//ceiling
+
+        //Other platforms
+        model.AddPlatform(3, 1, 51, 50);// start platform
+        model.AddPlatform(3, 1, 66, 51);//down right platform
+        model.AddPlatform(3, 1, 66, 54);//just above previous
+        model.AddPlatform(3, 1, 60, 62);//to jump on the last one
+        model.AddPlatform(2, 1, 55, 60);//below the teleporter
+
+        //Moving platform
+        model.AddMovingPlatform(3, 1, 58, 50, 0, 3);//post pike platform
+        model.AddMovingPlatform(3, 1, 64, 56, 1, 3);//elevator platform
+
+        //Magic Platform
+        model.AddMagicPlatform(1, 1, 55, 62, 0, 2);//blocking teleporter
+
+        //Teleporter
+        model.AddTeleportPlatform(1, 1, 55, 63, 50, 60);
 
         for (int i = 0; i < model.platform.Count; i++)
         {
             view.AddPlatform(model.platform[i].gameObject.transform);
         }
 
-        model.AddPike(1, 1, 62, 62);
+        for (int i = 0; i < model.movingPlatform.Count; i++)
+        {
+            view.AddMovingPlatform(model.movingPlatform[i].gameObject.transform);
+        }
+        // model.AddPike(1, 1, 62, 62);
 
         for (int i = 0; i < model.pikes.Count; i++)
         {
             view.AddPike(model.pikes[i].gameObject.transform);
+        }
+
+        for (int i = 0; i < model.magicPlatform.Count; i++)
+        {
+            view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
+        }
+
+        for (int i = 0; i < model.teleportPlatform.Count; i++)
+        {
+            view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
         }
     }
 
