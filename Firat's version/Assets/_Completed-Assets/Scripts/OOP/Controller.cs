@@ -26,17 +26,19 @@ public class Controller : MonoBehaviour
         model = new Model.Model();
         view = new View.View();
 
-
+       // model.player.spaceship.gameObject.transform.position = new Vector3(2, 2, 2);
+        //model.player.spaceship.rigidbody.transform.position = new Vector3(2, 2, 2);
         view.AddPlayerSpaceship(model.player.spaceship.gameObject.transform);
         print(model.player.spaceship.gameObject.transform);
-        
-		BuildLevel ();
+        BuildLevel ();
+        BuildLevel2();
 
         //view.AddPlatform(model.platform.gameObject.transform);   
         removeHazards = new List<int>();
         //view.ShootEvent += ShootEvent;
         view.OnMove += MoveEvent;
         view.OnJump += JumpEvent;
+        view.OnThink += ThinkEvent;
         model.gameOver = false;
         view.restartText.gUIText.text = "";
         view.gameOverText.gUIText.text = "";
@@ -66,19 +68,19 @@ public class Controller : MonoBehaviour
 
                 if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.x <= model.movingPlatform[i].origin_x + model.movingPlatform[i]._amplitude)
                 {
-                    print("moving right");
+                   // print("moving right");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.01f, 0.0f, 0.0f));
                     //  model.movingPlatform[i].position += new Vector3(0.1f, 0, 0);
                 }
                 //if platform goes to the right and is at the good place or too far, invert direction
                 else if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.x >= model.movingPlatform[i].origin_x + model.movingPlatform[i]._amplitude)
                 {
-                    print("stoping!!!");
+                  //  print("stoping!!!");
                     model.movingPlatform[i].right = false;
                 }
                 else if (model.movingPlatform[i].right == false && model.movingPlatform[i].rigidbody.position.x >= model.movingPlatform[i].origin_x)
                 {
-                    print("moving left");
+                  //  print("moving left");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(-0.01f, 0.0f, 0.0f));
                 }
                 else if (model.movingPlatform[i].rigidbody.position.x <= model.movingPlatform[i].origin_x)
@@ -90,18 +92,18 @@ public class Controller : MonoBehaviour
             {
                 if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.z <= model.movingPlatform[i].origin_z + model.movingPlatform[i]._amplitude)
                 {
-                    print("moving right");
+                  //  print("moving right");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, 0.01f));
                 }
                 //if platform goes to the right and is at the good place or too far, invert direction
                 else if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.z >= model.movingPlatform[i].origin_z + model.movingPlatform[i]._amplitude)
                 {
-                    print("stoping!!!");
+                   // print("stoping!!!");
                     model.movingPlatform[i].right = false;
                 }
                 else if (model.movingPlatform[i].right == false && model.movingPlatform[i].rigidbody.position.z >= model.movingPlatform[i].origin_z)
                 {
-                    print("moving left");
+                   // print("moving left");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, -0.01f));
                 }
                 else if (model.movingPlatform[i].rigidbody.position.z <= model.movingPlatform[i].origin_z)
@@ -110,6 +112,85 @@ public class Controller : MonoBehaviour
                 }
             }
         }
+
+        for (int i = 0; i < model.teleportPlatform.Count; i++)
+        {
+           // print("x axis : " + (model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x));
+           // print("z axis :  " + (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z));
+            //check if collision or if "in contact" so If less than 1 between
+            //check if difference between the two obj.position.x between 0.5 and -0.5
+            float sizex = 1;
+            float sizez = 1.4f;
+            if (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= sizez &&
+                model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -sizez && 
+                model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= sizex &&
+                model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
+            {
+                print("Beam me up Scotty");
+                model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+                Camera.main.transform.position = new Vector3(model.teleportPlatform[i].destination_x, 20, model.teleportPlatform[i].destination_z);
+              //  GetComponent<Camera>().transform.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+            } 
+        }
+
+        //Player/platform control
+        //Destroy bolts that exits the boundary
+        for (int j = 0; j < model.player.spaceship.cannon.bolts.Count; j++)
+        {
+            if (model.player.spaceship.cannon.bolts[j].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
+                model.player.spaceship.cannon.DestroyBolt(j);
+        }
+
+        //Check if player is grounded on a platform
+        for (int i = 0; i < model.platform.Count; i++)
+        {
+            if (model.player.spaceship.CollisionDetection(model.platform[i].collider, NO_OPERATOR))
+            {
+                view.grounded = true;
+            }
+        }
+        //Check if player is grounded on a moving platform
+        for (int i = 0; i < model.movingPlatform.Count; i++)
+        {
+            if (model.player.spaceship.CollisionDetection(model.movingPlatform[i].collider, NO_OPERATOR))
+            {
+                view.grounded = true;
+                model.player.spaceship.rigidbody.transform.parent = model.movingPlatform[i].rigidbody.transform;
+            }
+            if (model.player.spaceship.CollisionDetection(model.movingPlatform[i].collider, NOT_OPERATOR))
+            {
+                model.player.spaceship.rigidbody.transform.parent = null;
+            }
+        }
+        //Check if player is grounded on a teleport platform
+        for (int i = 0; i < model.magicPlatform.Count; i++)
+        {
+            if (model.player.spaceship.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
+            {
+                view.grounded = true;
+            }
+        }
+
+        /*
+        // Check if the player has grounded on the bottom platform
+        if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
+        {
+            view.grounded = true;
+        }
+        if(model.player.spaceship.CollisionDetection(model.platform[0].GetCollider(), NOT_OPERATOR))
+        {
+            view.grounded = false;
+        }
+        */
+
+        //Pike control
+        //End the game if the player touches a pike
+        for (int i = 0; i < model.pikes.Count; i++)
+        {
+            if (model.player.spaceship.CollisionDetection(model.pikes[i].GetCollider(), NO_OPERATOR))
+                GameOver();
+        }
+
 
         for (int i = 0; i < model.hazards.Count; i++)
         {
@@ -247,7 +328,7 @@ public class Controller : MonoBehaviour
         if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
             print("YEY!");*/
 
-
+        /*
         if (!model.gameOver)
         {
             //Clamp player within the screen
@@ -260,7 +341,7 @@ public class Controller : MonoBehaviour
             //Roll player spaceship by sideways velocity
             model.player.spaceship.rigidbody.rotation = Quaternion.Euler(0.0f, 0.0f, model.player.spaceship.rigidbody.velocity.x * -7f);
         }
-
+        */
         //Subscribe the ShootEvent ones when possible to fire
         if (!view.ShootEventSubscribed() && Time.time > model.player.spaceship.cannon.nextFire)
         {
@@ -347,14 +428,89 @@ public class Controller : MonoBehaviour
 
     private void MoveEvent(object sender, View.PlayerInput e)
     {
+        //float moveSpeed = 1.0f;
         //Update player position by input
         //print("Player moved");
         //model.player.spaceship.rigidbody.velocity = e.position * 10;
-        model.player.spaceship.position.y = 0;
-        model.player.spaceship.rigidbody.velocity = new Vector3(e.position.x * 3, 0, 0);
+        //model.player.spaceship.position.y = 0;
+        model.player.spaceship.rigidbody.velocity = new Vector3(e.velocity.x * 10, 0, e.velocity.z);
+        //model.player.spaceship.rigidbody.transform.Translate( new Vector3(e.velocity.x / 4, 0, e.velocity.z));
+        //model.player.spaceship.rigidbody.AddForce(e.force);
+        //model.player.spaceship.rigidbody.velocity = e.force;
+        //model.player.spaceship.rigidbody.transform.Translate(Vector3.right * e.position.x / 10 );
         //model.player.spaceship.rigidbody.useGravity = true;
     }
 
+    private void ThinkEvent(object sender, EventArgs e)
+    {
+        print("JEDI POWWWAWAAAAAAAAAAA");
+        //check if magic platform in the hood
+        //when one is, movie it accordingly to its direction
+        for (int i = 0; i < model.magicPlatform.Count; i++)
+        {
+            // print("x axis : " + (model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x));
+            // print("z axis :  " + (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z));
+            float sizex = 5;
+            float sizez = 5;
+            if (model.magicPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -sizez &&
+             model.magicPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= sizez &&
+             model.magicPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= sizex &&
+             model.magicPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
+            {
+                if (model.magicPlatform[i]._direction == 0)
+                { 
+                if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x + model.magicPlatform[i]._amplitude)
+                {
+                    // print("moving right");
+                    //model.magicPlatform[i].rigidbody.MovePosition(new Vector3(0.1f, 0.0f, 0.0f));
+                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.1f, 0.0f, 0.0f));
+                    //  model.movingPlatform[i].position += new Vector3(0.1f, 0, 0);
+                }
+                //if platform goes to the right and is at the good place or too far, invert direction
+                else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x + model.magicPlatform[i]._amplitude)
+                {
+                    //  print("stoping!!!");
+                    model.magicPlatform[i].right = false;
+                }
+                else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x)
+                {
+                    //  print("moving left");
+                    // model.magicPlatform[i].rigidbody.MovePosition(new Vector3(-0.1f, 0.0f, 0.0f));
+                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(-0.1f, 0.0f, 0.0f));
+                }
+                else if (model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x)
+                {
+                    model.magicPlatform[i].right = true;
+                }
+                print("Beam me up Scotty");
+            }
+            else
+            {
+                if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z + model.magicPlatform[i]._amplitude)
+                {
+                      print("moving up");
+                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, 0.1f));
+                }
+                //if platform goes to the right and is at the good place or too far, invert direction
+                else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z + model.magicPlatform[i]._amplitude)
+                {
+                     print("stoping!!!");
+                    model.magicPlatform[i].right = false;
+                }
+                else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z)
+                {
+                     print("moving down");
+                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, -0.1f));
+                }
+                else if (model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z)
+                {
+                    model.magicPlatform[i].right = true;
+                }
+            }
+                //model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+            }
+        }
+    }
     private void RestartEvent(object sender, EventArgs e)
     { 
         //Reload game scene
@@ -362,6 +518,7 @@ public class Controller : MonoBehaviour
         view.OnShoot += ShootEvent;
         view.OnMove += MoveEvent;
         view.OnJump += JumpEvent;
+        view.OnThink += ThinkEvent;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -372,38 +529,94 @@ public class Controller : MonoBehaviour
 
 	private void BuildLevel1()
 	{
-		model.AddPlatform (10, 1, 0, -2);
-        model.AddPlatform(1, 20, -7, 0);
-		for ( int i = 0 ; i < model.platform.Count ; i++ )
+        //level frame
+        Camera.main.transform.position = new Vector3(10, 15, 10);
+        Camera.main.orthographicSize = 13;
+
+        //framework for level
+        model.AddPlatform (21, 1, 9, -2);//floor
+        model.AddPlatform(1, 19, -2, 7);//left wall
+        model.AddPlatform(1, 19, 20, 7);//right wall
+        model.AddPlatform(21, 1, 9, 16);//ceilling
+
+        //other platform
+        model.AddPlatform(3, 1, 0, 6);//start platform
+        model.AddPlatform(10, 1, 12, 7);//middle one
+        //model.AddPlatform(5, 1,18, 7);
+       // model.AddPlatform(10, 1, 0, 0);
+        /*model.AddPlatform(10, 1, 0, 0);
+        model.AddPlatform(10, 1, 0, 0);
+        model.AddPlatform(10, 1, 0, 0);*/
+
+        for ( int i = 0 ; i < model.platform.Count ; i++ )
 		{
 			view.AddPlatform(model.platform[i].gameObject.transform);
 		}
 
-		model.AddTeleportPlatform (1, 1, 5, 3, 78, 65);
+		model.AddTeleportPlatform (1, 1, 18, 13, 59, 57);
 
 		for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
 		{
 			view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
 		}
 
-		model.AddMovingPlatform (1, 1, 0, 7, 0, 2);
+	//	model.AddMovingPlatform (1, 1, 0, 7, 1, 2);
 
 		for ( int i = 0 ; i < model.movingPlatform.Count ; i++ )
 		{
 			view.AddMovingPlatform(model.movingPlatform[i].gameObject.transform);
 		}
 
-		model.AddMagicPlatform (1, 1, 5, 5, 0, 0);
+		model.AddMagicPlatform (3, 1, 14, 10, 1, 3);
 
 		for ( int i = 0 ; i < model.magicPlatform.Count ; i++ )
 		{
 			view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
 		}
-		
-	}
 
-    private void JumpEvent(object sender, EventArgs e)
+        model.AddPike(1, 1, 6, 3);
+        for (int i = 0; i < model.magicPlatform.Count; i++)
+        {
+            view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
+        }
+
+    }
+
+    private void BuildLevel2()
     {
+        //Camera.main.transform.position = new Vector3(10, 15, 10);
+        //Camera.main.orthographicSize = 13;
+
+        //framework for level
+        model.AddPlatform(21, 1, 59, 48);
+        model.AddPlatform(1, 19, 48, 57);
+        model.AddPlatform(1, 19, 70, 57);
+        model.AddPlatform(21, 1, 59, 66);
+
+        for (int i = 0; i < model.platform.Count; i++)
+        {
+            view.AddPlatform(model.platform[i].gameObject.transform);
+        }
+
+        model.AddPike(1, 1, 62, 62);
+
+        for (int i = 0; i < model.pikes.Count; i++)
+        {
+            view.AddPike(model.pikes[i].gameObject.transform);
+        }
+    }
+
+    private void JumpEvent(object sender, View.PlayerInput e)
+    {
+        float JumpSpeed = 2.0f;
+        /*
+        if(model.player.spaceship.grounded )
+        {
+            model.player.spaceship.rigidbody.AddForce(Vector3.forward * JumpSpeed);
+            model.player.spaceship.grounded = false;
+        }*/
+
+
         if (!view.jumpTriggered)
         {
             //model.player.spaceship.rigidbody.AddRelativeForce(0, 0, -10, ForceMode.Acceleration);
@@ -411,10 +624,14 @@ public class Controller : MonoBehaviour
         }
 
         print("Player jumped");
-        if (view.jumping)
+        if (view.grounded)
         {
-            view.jumping = false;
-            model.player.spaceship.rigidbody.AddForce(0, 0, 5, ForceMode.Impulse);
+            view.grounded = false;
+            //view.jumping = false;
+            //model.player.spaceship.rigidbody.AddForce(0, 0, 5, ForceMode.Impulse);
+            //model.player.spaceship.rigidbody.transform.Translate(Vector3.forward * JumpSpeed);
+            model.player.spaceship.rigidbody.AddForce(e.velocity);
+            model.player.spaceship.rigidbody.transform.parent = null;
         }
 
         //playerSpaceship.gameObject.GetComponent<Rigidbody>().AddForce(0, 50, 0, ForceMode.Impulse);

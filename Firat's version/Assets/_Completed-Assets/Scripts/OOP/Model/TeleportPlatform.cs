@@ -11,8 +11,8 @@ namespace Model
 	{
 		int x, z;
 		public int destination_x;
-		public int destination_y;
-		public TeleportPlatform(int length, int width, int x, int z, int dest_x, int dest_y)
+		public int destination_z;
+		public TeleportPlatform(int length, int width, int x, int z, int dest_x, int dest_z)
 		{
 			LoadPrefab("TeleportPlatform");
 			//position = new Vector3(x, 0, z);
@@ -20,7 +20,7 @@ namespace Model
 			this.z = z;
 			SetPosition(x, z);
 			destination_x = dest_x;
-			destination_y = dest_y;
+			destination_z = dest_z;
 			_length = length;
 			_width = width;
 		}

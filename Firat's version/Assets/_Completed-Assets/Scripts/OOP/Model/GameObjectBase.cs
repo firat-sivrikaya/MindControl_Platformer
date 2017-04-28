@@ -27,7 +27,7 @@ namespace Model
         {
             if (collider != null && this.collider != null && @operator(Intersects(collider)))
             {
-                Destroy();
+               // Destroy();
 
                 return true;
             }

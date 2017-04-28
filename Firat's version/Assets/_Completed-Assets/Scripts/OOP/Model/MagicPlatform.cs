@@ -10,14 +10,16 @@ namespace Model
 	public class MagicPlatform : MovingPlatform 
 	{
 		int x, z;
-		public int _direction = 0; //0 = horizontal, 1 = vertical, define the direction of the movment
+		public int _direction = 0; //0 = vertical up , 1 = vertical down,2 = horizontal left 3 = horizontal rightdefine the direction of the movment
 		public int _amplitude = 0; //define the amplitude of the movment
-
+        // pass the boolean "right" in the constructor to define the start ?
 		public MagicPlatform(int length, int width, int x, int z, int direction, int amplitude)
 		{
 			LoadPrefab("MagicPlatform");
 			this.x = x;
 			this.z = z;
+            origin_x = x;
+            origin_z = z;
 			//position = new Vector3(x, 0, z);
 			SetPosition(x, z);
 			_direction = direction;

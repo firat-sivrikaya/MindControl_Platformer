@@ -18,7 +18,7 @@ namespace Model
 		{
 			LoadPrefab("MovingPlatform");
 			origin_x = x;
-			this.z = z;
+			origin_z = z;
 			//position = new Vector3(x, 0, z);
 			SetPosition(x, z);
 			_direction = direction;

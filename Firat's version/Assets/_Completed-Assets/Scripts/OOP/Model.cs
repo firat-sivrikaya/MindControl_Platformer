@@ -17,6 +17,7 @@ namespace Model
 		public List<TeleportPlatform> teleportPlatform;
 		public List<MovingPlatform> movingPlatform;
 		public List<MagicPlatform> magicPlatform;
+        public List<Pike> pikes;
         public Model()
         {
             player = new Player();
@@ -25,6 +26,7 @@ namespace Model
 			teleportPlatform = new List<TeleportPlatform> ();
 			movingPlatform = new List<MovingPlatform> ();
 			magicPlatform = new List<MagicPlatform> ();
+            pikes = new List<Pike>();
             ResetHazards();
         }
 
@@ -74,6 +76,12 @@ namespace Model
             SetPlatform(platform.Count -1);
         }
 
+        public void AddPike(int length, int width, int x, int z)
+        {
+            pikes.Add(new Pike(length, width, x, z));
+            SetPike(pikes.Count - 1);
+        }
+
         private void Set(int i)
         {
             hazards[i].SetPosition();
@@ -109,6 +117,13 @@ namespace Model
             platform[i].Instantiate();
 			//platform [i].SetPosition ();
 			platform[i].SetScale();
+        }
+
+        private void SetPike(int i)
+        {
+            pikes[i].Instantiate();
+            //platform [i].SetPosition ();
+            pikes[i].SetScale();
         }
 
 
