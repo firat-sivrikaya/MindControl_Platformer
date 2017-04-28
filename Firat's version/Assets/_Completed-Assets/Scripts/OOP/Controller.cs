@@ -463,8 +463,6 @@ public class Controller : MonoBehaviour
         //when one is, movie it accordingly to its direction
         for (int i = 0; i < model.magicPlatform.Count; i++)
         {
-            // print("x axis : " + (model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x));
-            // print("z axis :  " + (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z));
             float sizex = 5;
             float sizez = 5;
             if (model.magicPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -sizez &&
@@ -472,57 +470,100 @@ public class Controller : MonoBehaviour
              model.magicPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= sizex &&
              model.magicPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
             {
+                //0 == Horizontal from left to right
+                //1 == Horizontal from right to left.
+                //2 == vertical UP so platform will move from up to bottom
+                //3 == vertical DOWN
                 if (model.magicPlatform[i]._direction == 0)
                 { 
-                if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x + model.magicPlatform[i]._amplitude)
+                    if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x + model.magicPlatform[i]._amplitude)
+                    {
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.1f, 0.0f, 0.0f));
+                    }
+                    //if platform goes to the right and is at the good place or too far, invert direction
+                    else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x + model.magicPlatform[i]._amplitude)
+                    {
+                        model.magicPlatform[i].right = false;
+                    }
+                    else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x)
+                    {
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(-0.1f, 0.0f, 0.0f));
+                    }
+                    else if (model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x)
+                    {
+                        model.magicPlatform[i].right = true;
+                    }
+                 }
+                else if (model.magicPlatform[i]._direction == 1)//start right and go left
                 {
-                    // print("moving right");
-                    //model.magicPlatform[i].rigidbody.MovePosition(new Vector3(0.1f, 0.0f, 0.0f));
-                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.1f, 0.0f, 0.0f));
-                    //  model.movingPlatform[i].position += new Vector3(0.1f, 0, 0);
+                    if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x - model.magicPlatform[i]._amplitude)
+                    {
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(-0.1f, 0.0f, 0.0f));
+                    }
+                    //if platform goes to the left and is at the good place or too far, invert direction
+                    else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x - model.magicPlatform[i]._amplitude)
+                    {
+                        //  print("stoping!!!");
+                        model.magicPlatform[i].right = false;
+                    }
+                    else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x)
+                    {
+                        //  print("moving left");
+                        // model.magicPlatform[i].rigidbody.MovePosition(new Vector3(-0.1f, 0.0f, 0.0f));
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.1f, 0.0f, 0.0f));
+                    }
+                    else if (model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x)
+                    {
+                        model.magicPlatform[i].right = true;
+                    }
                 }
-                //if platform goes to the right and is at the good place or too far, invert direction
-                else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x + model.magicPlatform[i]._amplitude)
+                else if (model.magicPlatform[i]._direction == 2)//start up and go down
                 {
-                    //  print("stoping!!!");
-                    model.magicPlatform[i].right = false;
+                    if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z - model.magicPlatform[i]._amplitude)
+                    {
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.0f, 0.0f, -0.1f));
+                    }
+                    //if platform goes to the left and is at the good place or too far, invert direction
+                    else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z - model.magicPlatform[i]._amplitude)
+                    {
+                        //  print("stoping!!!");
+                        model.magicPlatform[i].right = false;
+                    }
+                    else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z)
+                    {
+                        //  print("moving left");
+                        // model.magicPlatform[i].rigidbody.MovePosition(new Vector3(-0.1f, 0.0f, 0.0f));
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.0f, 0.0f, 0.1f));
+                    }
+                    else if (model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z)
+                    {
+                        model.magicPlatform[i].right = true;
+                    }
                 }
-                else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.x >= model.magicPlatform[i].origin_x)
+                else if (model.magicPlatform[i]._direction == 3)//start down and goes up
                 {
-                    //  print("moving left");
-                    // model.magicPlatform[i].rigidbody.MovePosition(new Vector3(-0.1f, 0.0f, 0.0f));
-                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(-0.1f, 0.0f, 0.0f));
+                    if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z + model.magicPlatform[i]._amplitude)
+                    {
+                          print("moving up");
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, 0.1f));
+                    }
+                    //if platform goes to the right and is at the good place or too far, invert direction
+                    else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z + model.magicPlatform[i]._amplitude)
+                    {
+                         print("stoping!!!");
+                        model.magicPlatform[i].right = false;
+                    }
+                    else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z)
+                    {
+                         print("moving down");
+                        model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, -0.1f));
+                    }
+                    else if (model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z)
+                    {
+                        model.magicPlatform[i].right = true;
+                    }
                 }
-                else if (model.magicPlatform[i].rigidbody.position.x <= model.magicPlatform[i].origin_x)
-                {
-                    model.magicPlatform[i].right = true;
-                }
-                print("Beam me up Scotty");
-            }
-            else
-            {
-                if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z + model.magicPlatform[i]._amplitude)
-                {
-                      print("moving up");
-                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, 0.1f));
-                }
-                //if platform goes to the right and is at the good place or too far, invert direction
-                else if (model.magicPlatform[i].right == true && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z + model.magicPlatform[i]._amplitude)
-                {
-                     print("stoping!!!");
-                    model.magicPlatform[i].right = false;
-                }
-                else if (model.magicPlatform[i].right == false && model.magicPlatform[i].rigidbody.position.z >= model.magicPlatform[i].origin_z)
-                {
-                     print("moving down");
-                    model.magicPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, -0.1f));
-                }
-                else if (model.magicPlatform[i].rigidbody.position.z <= model.magicPlatform[i].origin_z)
-                {
-                    model.magicPlatform[i].right = true;
-                }
-            }
-                //model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+                    //model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
             }
         }
     }
@@ -582,7 +623,7 @@ public class Controller : MonoBehaviour
 			view.AddMovingPlatform(model.movingPlatform[i].gameObject.transform);
 		}
 
-		model.AddMagicPlatform (3, 1, 14, 10, 1, 3);
+		model.AddMagicPlatform (3, 1, 14, 3, 3, 2);
 
 		for ( int i = 0 ; i < model.magicPlatform.Count ; i++ )
 		{
