@@ -10,7 +10,7 @@ namespace View
             LoadPrefab("Done_Player");
             Instantiate(modelTransform);
             explosion = new Explosion("done_explosion_player");
-            bolt = LoadReturnPrefab("Done_Bolt");
+           // bolt = LoadReturnPrefab("Done_Bolt");
         }
     }
 }

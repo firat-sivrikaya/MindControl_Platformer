@@ -5,13 +5,13 @@ namespace Model
 {
     class Model
     {
-        public List<IHazard> hazards;
+        //public List<IHazard> hazards;
 
         public bool gameOver;
         public int score;
 
         public Player player;
-        public Boundary boundary;
+        //public Boundary boundary;
         public BlinkMonster blinkMonster;
         public List<Platform> platform;
 		public List<TeleportPlatform> teleportPlatform;
@@ -21,15 +21,15 @@ namespace Model
         public Model()
         {
             player = new Player();
-            boundary = new Boundary();
+           // boundary = new Boundary();
             platform = new List<Platform>();
 			teleportPlatform = new List<TeleportPlatform> ();
 			movingPlatform = new List<MovingPlatform> ();
 			magicPlatform = new List<MagicPlatform> ();
             pikes = new List<Pike>();
-            ResetHazards();
+           // ResetHazards();
         }
-
+/*
         public void ResetHazards()
         {
             hazards = new List<IHazard>();
@@ -44,19 +44,19 @@ namespace Model
         {
             hazards.Add(new EnemySpaceship());
             Set(hazards.Count - 1);  
-        }
+        }*/
 
         public void AddMonster(int x, int y)
         {
             blinkMonster = new BlinkMonster(x, y);
             SetMonster();
         }
-
+/*
         public void AddAsteroid(int kind)
         {
             hazards.Add(new Asteroid(kind));
             Set(hazards.Count - 1);
-        }
+        }*/
 
 		public void AddTeleportPlatform(int length, int width, int x, int z, int destx, int desty, int camx, int camz)
 		{
@@ -88,12 +88,12 @@ namespace Model
             SetPike(pikes.Count - 1);
         }
 
-        private void Set(int i)
+      /*  private void Set(int i)
         {
             hazards[i].SetPosition();
             hazards[i].Instantiate();
             hazards[i].Init();
-        }
+        }*/
 
         private void SetMonster()
         {
