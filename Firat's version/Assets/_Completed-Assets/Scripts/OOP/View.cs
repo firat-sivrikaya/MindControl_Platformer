@@ -32,11 +32,12 @@ namespace View
         public bool jumping;
         public bool jumpTriggered;
         public bool grounded;
-
+        public bool groundedOnMagic;
 
         public View()
         {
             grounded = false;
+            groundedOnMagic = false;
             platforms = new List<Platform>();
             pikes = new List<Pike>();
 			teleportPlatforms = new List<TeleportPlatform> ();

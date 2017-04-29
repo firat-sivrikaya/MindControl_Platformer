@@ -116,11 +116,13 @@ public class Controller : MonoBehaviour
             if (model.player.character.CollisionDetection(model.movingPlatform[i].collider, NO_OPERATOR))
             {
                 view.grounded = true;
+                print("Grounded on moving");
                 model.player.character.rigidbody.transform.parent = model.movingPlatform[i].rigidbody.transform;
             }
-            if (model.player.character.CollisionDetection(model.movingPlatform[i].collider, NOT_OPERATOR))
+            else if (model.player.character.CollisionDetection(model.movingPlatform[i].collider, NOT_OPERATOR))
             {
-                model.player.character.rigidbody.transform.parent = null;
+                if (!view.grounded)
+                    model.player.character.rigidbody.transform.parent = null;
             }
         }
 
@@ -130,22 +132,17 @@ public class Controller : MonoBehaviour
             if( model.player.character.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
             {
                 view.grounded = true;
+                view.groundedOnMagic = true;
                 model.player.character.rigidbody.transform.parent = model.magicPlatform[i].rigidbody.transform;
             }
+             
             if( model.player.character.CollisionDetection(model.magicPlatform[i].collider, NOT_OPERATOR))
             {
-                model.player.character.rigidbody.transform.parent = null;
+                if (!view.grounded)
+                    model.player.character.rigidbody.transform.parent = null;
             }            
         }
 
-        //Check if player is grounded on a teleport platform
-        for (int i = 0; i < model.magicPlatform.Count; i++)
-        {
-            if (model.player.character.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
-            {
-                view.grounded = true;
-            }
-        }
         // Move the camera to congratz screen if the player achieves to get to last teleport
         if(model.player.character.CollisionDetection(model.teleportPlatform[model.teleportPlatform.Count - 1].collider, NO_OPERATOR))
         {
