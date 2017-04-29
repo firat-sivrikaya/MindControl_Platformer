@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
         view.OnJump += JumpEvent;
         view.OnThink += ThinkEvent;
         model.gameOver = false;
+        //Camera.main.orthographicSize = 15.0f;
     }
 
     void FixedUpdate()
@@ -31,7 +32,14 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
-
+        
+        
+        if ( !model.gameOver)
+        {
+            Camera.main.orthographicSize = 12.0f;
+            Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, model.player.character.rigidbody.position.z);
+        }
+            
         //Hazard control
         //Make platform move
         for (int i = 0; i < model.movingPlatform.Count; i++)
@@ -85,6 +93,9 @@ public class Controller : MonoBehaviour
                 model.blinkMonster.rigidbody.position.x - model.player.character.rigidbody.position.x >= -1)
             GameOver();
 
+            
+            
+
             for (int i = 0; i < model.teleportPlatform.Count; i++)
         {
             //check if collision or if "in contact" so If less than 1 between
@@ -104,6 +115,7 @@ public class Controller : MonoBehaviour
                     {
                         GameOver();
                         Camera.main.transform.position = new Vector3(-40, 20, -200);
+                        Camera.main.orthographicSize = 25.0f;
                         return;
                     }
                 model.player.character.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
