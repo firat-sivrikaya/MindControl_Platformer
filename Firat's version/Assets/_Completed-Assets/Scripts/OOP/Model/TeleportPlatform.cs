@@ -12,12 +12,16 @@ namespace Model
 		int x, z;
 		public int destination_x;
 		public int destination_z;
-		public TeleportPlatform(int length, int width, int x, int z, int dest_x, int dest_z)
+        public int camera_x;
+        public int camera_z;
+		public TeleportPlatform(int length, int width, int x, int z, int dest_x, int dest_z, int camera_x, int camera_z)
 		{
 			LoadPrefab("TeleportPlatform");
 			//position = new Vector3(x, 0, z);
 			this.x = x;
 			this.z = z;
+            this.camera_x = camera_x;
+            this.camera_z = camera_z;
 			SetPosition(x, z);
 			destination_x = dest_x;
 			destination_z = dest_z;

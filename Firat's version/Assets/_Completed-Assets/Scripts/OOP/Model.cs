@@ -52,9 +52,9 @@ namespace Model
             Set(hazards.Count - 1);
         }
 
-		public void AddTeleportPlatform(int length, int width, int x, int z, int destx, int desty)
+		public void AddTeleportPlatform(int length, int width, int x, int z, int destx, int desty, int camx, int camz)
 		{
-			teleportPlatform.Add (new TeleportPlatform(length, width, x, z, destx, desty));
+			teleportPlatform.Add (new TeleportPlatform(length, width, x, z, destx, desty, camx, camz));
 			SetTeleportPlatform(teleportPlatform.Count - 1);
 		}
 

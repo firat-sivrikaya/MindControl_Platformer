@@ -26,14 +26,10 @@ public class Controller : MonoBehaviour
         model = new Model.Model();
         view = new View.View();
 
-       // model.player.spaceship.gameObject.transform.position = new Vector3(2, 2, 2);
-        //model.player.spaceship.rigidbody.transform.position = new Vector3(2, 2, 2);
         view.AddPlayerSpaceship(model.player.spaceship.gameObject.transform);
         print(model.player.spaceship.gameObject.transform);
-        BuildLevel ();
-        BuildLevel2();
-
-        //view.AddPlatform(model.platform.gameObject.transform);   
+        BuildLevel();
+   
         removeHazards = new List<int>();
         //view.ShootEvent += ShootEvent;
         view.OnMove += MoveEvent;
@@ -129,8 +125,9 @@ public class Controller : MonoBehaviour
                 print("Beam me up Scotty");
                 //how to put the cam in the center of the new level?
                 model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
-                Camera.main.transform.position = new Vector3(model.teleportPlatform[i].destination_x, 20, model.teleportPlatform[i].destination_z);
-              //  GetComponent<Camera>().transform.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+                //Camera.main.transform.position = new Vector3(model.teleportPlatform[i].destination_x, 20, model.teleportPlatform[i].destination_z);
+                Camera.main.transform.position = new Vector3(model.teleportPlatform[i].camera_x, 20, model.teleportPlatform[i].camera_z);
+                // GetComponent<Camera>().transform.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
             } 
         }
 
@@ -187,17 +184,17 @@ public class Controller : MonoBehaviour
             }
         }
 
-        /*
+        
         // Check if the player has grounded on the bottom platform
-        if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
+        /*if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
         {
             view.grounded = true;
         }
         if(model.player.spaceship.CollisionDetection(model.platform[0].GetCollider(), NOT_OPERATOR))
         {
             view.grounded = false;
-        }
-        */
+        }*/
+        
 
         //Pike control
         //End the game if the player touches a pike
@@ -581,7 +578,8 @@ public class Controller : MonoBehaviour
 
 	private void BuildLevel ()
 	{
-		BuildLevel1 ();
+		BuildLevel1();
+        BuildLevel2();
 	}
 
 	private void BuildLevel1()
@@ -601,43 +599,26 @@ public class Controller : MonoBehaviour
         //other platform
         model.AddPlatform(3, 1, 0, 6);//start platform
         model.AddPlatform(10, 1, 12, 7);//middle one
-        //model.AddPlatform(5, 1,18, 7);
-       // model.AddPlatform(10, 1, 0, 0);
-        /*model.AddPlatform(10, 1, 0, 0);
-        model.AddPlatform(10, 1, 0, 0);
-        model.AddPlatform(10, 1, 0, 0);*/
+                                        //model.AddPlatform(5, 1,18, 7);
+                                        // model.AddPlatform(10, 1, 0, 0);
+                                        /*model.AddPlatform(10, 1, 0, 0);
+                                        model.AddPlatform(10, 1, 0, 0);
+                                        model.AddPlatform(10, 1, 0, 0);*/
+        model.AddTeleportPlatform(1, 1, 5, 2, 50, 60, 59, 57);
+        /*
+                for ( int i = 0 ; i < model.platform.Count ; i++ )
+                {
+                    view.AddPlatform(model.platform[i].gameObject.transform);
+                }
 
-        for ( int i = 0 ; i < model.platform.Count ; i++ )
-		{
-			view.AddPlatform(model.platform[i].gameObject.transform);
-		}
 
-		model.AddTeleportPlatform (1, 1, 5, 2, 50, 60);
 
-		for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
-		{
-			view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
-		}
+                for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
+                {
+                    view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
+                }
 
-	//	model.AddMovingPlatform (1, 1, 0, 7, 1, 2);
-    /*
-		for ( int i = 0 ; i < model.movingPlatform.Count ; i++ )
-		{
-			view.AddMovingPlatform(model.movingPlatform[i].gameObject.transform);
-		}
-
-		model.AddMagicPlatform (3, 1, 14, 3, 3, 2);
-
-		for ( int i = 0 ; i < model.magicPlatform.Count ; i++ )
-		{
-			view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
-		}
-
-        model.AddPike(1, 1, 6, 3);
-        for (int i = 0; i < model.magicPlatform.Count; i++)
-        {
-            view.AddMagicPlatform(model.magicPlatform[i].gameObject.transform);
-        }*/
+        */
 
     }
 
@@ -670,7 +651,7 @@ public class Controller : MonoBehaviour
         model.AddMagicPlatform(1, 1, 55, 62, 0, 2);//blocking teleporter
 
         //Teleporter
-        model.AddTeleportPlatform(1, 1, 55, 63, 50, 60);
+        model.AddTeleportPlatform(1, 1, 55, 63, 50, 60, 50, 60); //fake coordinate for now
 
         for (int i = 0; i < model.platform.Count; i++)
         {
