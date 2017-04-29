@@ -12,25 +12,24 @@ public class Controller : MonoBehaviour
     Func<bool, bool> NOT_OPERATOR = (a) => !a;
     Func<bool, bool> NO_OPERATOR = (a) => a;
 
-    public int hazardCount;
+  /* public int hazardCount;
     public float spawnWait;
     public float startWait;
     public float waveWait;
 
     public List<int> removeHazards;
-
+    */
     //View.PlayerSpaceship playerSpaceship;
 
     void Start()
     {
         model = new Model.Model();
         view = new View.View();
-
         view.AddPlayerSpaceship(model.player.spaceship.gameObject.transform);
         print(model.player.spaceship.gameObject.transform);
         BuildLevel();
    
-        removeHazards = new List<int>();
+        //removeHazards = new List<int>();
         //view.ShootEvent += ShootEvent;
         view.OnMove += MoveEvent;
         view.OnJump += JumpEvent;
@@ -108,8 +107,34 @@ public class Controller : MonoBehaviour
                 }
             }
         }
+        //make the ghost move
+        //launch rand. one on 120 chances (+- one move every two seconds)
+        if (model.blinkMonster != null && UnityEngine.Random.Range(1, 220) == 42)
+        {
+            int transx = 0;
+            int transz = 0;
+            if (model.player.spaceship.rigidbody.position.x > model.blinkMonster.rigidbody.position.x)
+                transx = 1;
+            else if (model.player.spaceship.rigidbody.position.x < model.blinkMonster.rigidbody.position.x)
+                transx = -1;
+            if (model.player.spaceship.rigidbody.position.z > model.blinkMonster.rigidbody.position.z)
+                transz = 1;
+            else if (model.player.spaceship.rigidbody.position.z < model.blinkMonster.rigidbody.position.z)
+                transz = -1;
+            model.blinkMonster.rigidbody.transform.Translate(transx, 0, transz);
+            print("moved");
+        }
 
-        for (int i = 0; i < model.teleportPlatform.Count; i++)
+        if (model.blinkMonster != null && model.blinkMonster.rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= 1.4 &&
+                model.blinkMonster.rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -1.4 &&
+                model.blinkMonster.rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= 1 &&
+                model.blinkMonster.rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -1)
+        {
+            GameOver();
+        }
+
+
+            for (int i = 0; i < model.teleportPlatform.Count; i++)
         {
            // print("x axis : " + (model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x));
            // print("z axis :  " + (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z));
@@ -133,12 +158,12 @@ public class Controller : MonoBehaviour
 
         //Player/platform control
         //Destroy bolts that exits the boundary
-        for (int j = 0; j < model.player.spaceship.cannon.bolts.Count; j++)
+       /* for (int j = 0; j < model.player.spaceship.cannon.bolts.Count; j++)
         {
             if (model.player.spaceship.cannon.bolts[j].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
                 model.player.spaceship.cannon.DestroyBolt(j);
         }
-
+        */
         //Check if player is grounded on a platform
         for (int i = 0; i < model.platform.Count; i++)
         {
@@ -205,7 +230,7 @@ public class Controller : MonoBehaviour
         }
 
 
-        for (int i = 0; i < model.hazards.Count; i++)
+    /*    for (int i = 0; i < model.hazards.Count; i++)
         {
             if (model.hazards[i].GetCollider() != null)
             {
@@ -336,7 +361,7 @@ public class Controller : MonoBehaviour
             if (model.player.spaceship.cannon.bolts[j].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
                 model.player.spaceship.cannon.DestroyBolt(j);
         }
-
+        */
        /* 
         if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
             print("YEY!");*/
@@ -356,7 +381,7 @@ public class Controller : MonoBehaviour
         }
         */
         //Subscribe the ShootEvent ones when possible to fire
-        if (!view.ShootEventSubscribed() && Time.time > model.player.spaceship.cannon.nextFire)
+      /*  if (!view.ShootEventSubscribed() && Time.time > model.player.spaceship.cannon.nextFire)
         {
             view.OnShoot += ShootEvent;
         }
@@ -371,7 +396,7 @@ public class Controller : MonoBehaviour
 
         //Reset destroy flag list
         removeHazards = new List<int>();
-    }
+    }*/
 
     /* 
     //Hazard spawn proces
@@ -408,8 +433,8 @@ public class Controller : MonoBehaviour
                 break;
             }
         }
-    }
-    */
+    */}
+    
     public void AddScore(int newScoreValue)
     {
         model.score += newScoreValue;
@@ -424,20 +449,20 @@ public class Controller : MonoBehaviour
     public void GameOver()
     {
         view.OnRestart += RestartEvent;
-        view.OnShoot -= ShootEvent;
+       // view.OnShoot -= ShootEvent;
         view.OnMove -= MoveEvent;
         view.OnJump -= JumpEvent;
         view.gameOverText.gUIText.text = "Game Over!";
         model.gameOver = true;
     }
-
+    /*
     private void ShootEvent(object sender, EventArgs e)
     {
         model.player.spaceship.cannon.nextFire = Time.time + model.player.spaceship.cannon.fireRate;
         view.OnShoot -= ShootEvent;
         model.player.spaceship.cannon.Fire();
         view.playerSpaceship.NewBolt(model.player.spaceship.cannon.bolts[model.player.spaceship.cannon.bolts.Count - 1].gameObject.transform);
-    }
+    }*/
 
     private void MoveEvent(object sender, View.PlayerInput e)
     {
@@ -569,7 +594,7 @@ public class Controller : MonoBehaviour
     { 
         //Reload game scene
         view.OnRestart -= RestartEvent;
-        view.OnShoot += ShootEvent;
+       // view.OnShoot += ShootEvent;
         view.OnMove += MoveEvent;
         view.OnJump += JumpEvent;
         view.OnThink += ThinkEvent;
@@ -587,38 +612,73 @@ public class Controller : MonoBehaviour
         //level frame
         Camera.main.transform.position = new Vector3(10, 15, 10);
         Camera.main.orthographicSize = 20;
-
+        //Change player's starting position
+        model.player.spaceship.rigidbody.position = new Vector3(0, 0, 8);
         //min x= -2 max x =20
         //min z = -2 max z = 16
         //framework for level
-        model.AddPlatform (21, 1, 9, -2);//floor
+        model.AddPlatform(21, 1, 9, -2);//floor
         model.AddPlatform(1, 19, -2, 7);//left wall
         model.AddPlatform(1, 19, 20, 7);//right wall
         model.AddPlatform(21, 1, 9, 16);//ceilling
 
         //other platform
         model.AddPlatform(3, 1, 0, 6);//start platform
-        model.AddPlatform(10, 1, 12, 7);//middle one
-                                        //model.AddPlatform(5, 1,18, 7);
-                                        // model.AddPlatform(10, 1, 0, 0);
-                                        /*model.AddPlatform(10, 1, 0, 0);
-                                        model.AddPlatform(10, 1, 0, 0);
-                                        model.AddPlatform(10, 1, 0, 0);*/
-        model.AddTeleportPlatform(1, 1, 5, 2, 50, 60, 59, 57);
-        /*
-                for ( int i = 0 ; i < model.platform.Count ; i++ )
-                {
-                    view.AddPlatform(model.platform[i].gameObject.transform);
-                }
+        //model.AddPlatform(10, 1, 12, 7);//middle one
+        model.AddPlatform(3, 1, 5, 10); //second platform next to start
+        model.AddPlatform(1, 1, 9, 3); //Small platform on the bottom
+
+        model.AddPlatform(1, 4, 15, 3); //left part of teleport container
+        model.AddPlatform(3, 1, 16, 2); //bottom part of teleport container
+        model.AddPlatform(1, 4, 18, 3); //right part of teleport container
+
+        //Moving platforms
+        model.AddMovingPlatform(3, 1, 12, 5, 1, 4); // Elevator platform near small platform
+
+        // Magic platforms
+        model.AddMagicPlatform(4, 4, 16, 7, 3, 3);
+        // Teleport platform
+        model.AddTeleportPlatform(1, 1, 17, 3, 50, 60, 59, 57);
+
+        // Pikes
+        model.AddPike(1, 5, 9, 10); //pike near second platform
+
+        //level frame
+        /* Camera.main.transform.position = new Vector3(10, 15, 10);
+         Camera.main.orthographicSize = 20;
+         model.AddMonster(5, 5);
+         view.AddBlinkMonster(model.blinkMonster.gameObject.transform);
+         //min x= -2 max x =20
+         //min z = -2 max z = 16
+         //framework for level
+         model.AddPlatform (21, 1, 9, -2);//floor
+         model.AddPlatform(1, 19, -2, 7);//left wall
+         model.AddPlatform(1, 19, 20, 7);//right wall
+         model.AddPlatform(21, 1, 9, 16);//ceilling
+
+         //other platform
+         model.AddPlatform(3, 1, 0, 6);//start platform
+         model.AddPlatform(10, 1, 12, 7);//middle one
+                                         //model.AddPlatform(5, 1,18, 7);
+                                         // model.AddPlatform(10, 1, 0, 0);
+                                         /*model.AddPlatform(10, 1, 0, 0);
+                                         model.AddPlatform(10, 1, 0, 0);
+                                         model.AddPlatform(10, 1, 0, 0);*/
+        /*  model.AddTeleportPlatform(1, 1, 5, 2, 50, 60, 59, 57);
+          /*
+                  for ( int i = 0 ; i < model.platform.Count ; i++ )
+                  {
+                      view.AddPlatform(model.platform[i].gameObject.transform);
+                  }
 
 
 
-                for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
-                {
-                    view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
-                }
+                  for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
+                  {
+                      view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
+                  }
 
-        */
+          */
 
     }
 

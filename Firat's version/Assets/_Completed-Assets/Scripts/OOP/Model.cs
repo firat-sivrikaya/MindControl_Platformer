@@ -12,7 +12,7 @@ namespace Model
 
         public Player player;
         public Boundary boundary;
-
+        public BlinkMonster blinkMonster;
         public List<Platform> platform;
 		public List<TeleportPlatform> teleportPlatform;
 		public List<MovingPlatform> movingPlatform;
@@ -44,6 +44,12 @@ namespace Model
         {
             hazards.Add(new EnemySpaceship());
             Set(hazards.Count - 1);  
+        }
+
+        public void AddMonster(int x, int y)
+        {
+            blinkMonster = new BlinkMonster(x, y);
+            SetMonster();
         }
 
         public void AddAsteroid(int kind)
@@ -89,6 +95,10 @@ namespace Model
             hazards[i].Init();
         }
 
+        private void SetMonster()
+        {
+            blinkMonster.Instantiate();
+        }
 		private void SetTeleportPlatform(int i)
 		{
 			teleportPlatform[i].Instantiate();

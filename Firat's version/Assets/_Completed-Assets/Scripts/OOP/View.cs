@@ -14,14 +14,15 @@ namespace View
 
     class View
     {
-        public event EventHandler<EventArgs> OnShoot;
+       // public event EventHandler<EventArgs> OnShoot;
         public event EventHandler<EventArgs> OnRestart;
         public event EventHandler<PlayerInput> OnMove;
 		public event EventHandler<PlayerInput> OnJump;
         public event EventHandler<EventArgs> OnThink;
 
         public PlayerSpaceship playerSpaceship;
-        public List<object> hazards;
+        public BlinkMonster blinkMonster;
+      //  public List<object> hazards;
 		public List<TeleportPlatform> teleportPlatforms;
 		public List<MovingPlatform> movingPlatforms;
 		public List<MagicPlatform> magicPlatforms;
@@ -39,7 +40,7 @@ namespace View
         public View()
         {
             grounded = false;
-            hazards = new List<object>();
+         //   hazards = new List<object>();
             platforms = new List<Platform>();
             pikes = new List<Pike>();
 			teleportPlatforms = new List<TeleportPlatform> ();
@@ -54,7 +55,7 @@ namespace View
         public void Update()
         {
             float SpeedHorizontal = 0.70f;
-            if (OnShoot != null && Input.GetButton("Fire1")) OnShoot(this, EventArgs.Empty);
+           // if (OnShoot != null && Input.GetButton("Fire1")) OnShoot(this, EventArgs.Empty);
 
             if (OnRestart != null && Input.GetKeyDown(KeyCode.R)) OnRestart(this, EventArgs.Empty);
 
@@ -102,14 +103,19 @@ namespace View
 
         }
 
-        public bool ShootEventSubscribed()
+     /*   public bool ShootEventSubscribed()
         {
             return (OnShoot == null) ? false : true; 
-        }
+        }*/
 
         public void AddPlayerSpaceship(Transform modelTransform)
         {
             playerSpaceship = new PlayerSpaceship(modelTransform);
+        }
+
+        public void AddBlinkMonster(Transform modelTransform)
+        {
+            blinkMonster = new BlinkMonster(modelTransform);
         }
 
 		public void AddTeleportPlatform(Transform modelTransform)
@@ -137,7 +143,7 @@ namespace View
             pikes.Add(new Pike(modelTransform));
         }
 
-        public void AddEnemySpaceship(int kind, Transform modelTransform)
+      /*  public void AddEnemySpaceship(int kind, Transform modelTransform)
         {
             hazards.Add(new EnemySpaceship(kind));
             EnemySpaceship enemySpaceship = (EnemySpaceship)hazards[hazards.Count - 1];
@@ -149,6 +155,6 @@ namespace View
             hazards.Add(new Asteroid(kind));
             Asteroid asteroid = (Asteroid)hazards[hazards.Count - 1];
             asteroid.Instantiate(modelTransform);
-        }
+        }*/
     }
 }

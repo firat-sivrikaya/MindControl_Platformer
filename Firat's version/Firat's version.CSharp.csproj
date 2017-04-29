@@ -88,6 +88,7 @@
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Controller.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model\Asteroid.cs" />
+    <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model\BlinkMonster.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model\Bolt.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model\Boundary.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model\Cannon.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\Model\TeleportPlatform.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\View.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\View\Asteroid.cs" />
+    <Compile Include="Assets\_Completed-Assets\Scripts\OOP\View\BlinkMonster.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\View\Bolt.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\View\EnemySpaceship.cs" />
     <Compile Include="Assets\_Completed-Assets\Scripts\OOP\View\Explosion.cs" />
