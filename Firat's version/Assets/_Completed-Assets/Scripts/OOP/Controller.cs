@@ -22,10 +22,6 @@ public class Controller : MonoBehaviour
         view.OnJump += JumpEvent;
         view.OnThink += ThinkEvent;
         model.gameOver = false;
-        view.restartText.gUIText.text = "";
-        view.gameOverText.gUIText.text = "";
-        model.score = 0;
-        UpdateScore();
     }
 
     void FixedUpdate()
@@ -35,10 +31,6 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
-        if (model.gameOver)
-        {
-            view.restartText.gUIText.text = "Press 'R' for Restart";
-        }
 
         //Hazard control
         //Make platform move
@@ -154,7 +146,12 @@ public class Controller : MonoBehaviour
                 view.grounded = true;
             }
         }
-
+        // Move the camera to congratz screen if the player achieves to get to last teleport
+        if(model.player.character.CollisionDetection(model.teleportPlatform[model.teleportPlatform.Count - 1].collider, NO_OPERATOR))
+        {
+            GameOver();
+            Camera.main.transform.position = new Vector3(-40, 20, -200);
+        }
         
         // Check if the player has grounded on the bottom platform
         /*if(model.player.character.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
@@ -181,23 +178,13 @@ public class Controller : MonoBehaviour
 
    }
     
-    public void AddScore(int newScoreValue)
-    {
-        model.score += newScoreValue;
-        UpdateScore();
-    }
-
-    void UpdateScore()
-    {
-        view.scoreText.gUIText.text = "Score: " + model.score;
-    }
 
     public void GameOver()
     {
         view.OnRestart += RestartEvent;
         view.OnMove -= MoveEvent;
         view.OnJump -= JumpEvent;
-        view.gameOverText.gUIText.text = "Game Over!";
+        Camera.main.transform.position = new Vector3(0, 20, -80);
         model.gameOver = true;
     }
 

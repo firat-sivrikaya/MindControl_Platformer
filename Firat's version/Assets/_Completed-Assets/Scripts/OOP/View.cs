@@ -33,9 +33,6 @@ namespace View
         public bool jumpTriggered;
         public bool grounded;
 
-        public ViewText gameOverText;
-        public ViewText scoreText;
-        public ViewText restartText;
 
         public View()
         {
@@ -45,9 +42,6 @@ namespace View
 			teleportPlatforms = new List<TeleportPlatform> ();
 			movingPlatforms = new List<MovingPlatform> ();
 			magicPlatforms = new List<MagicPlatform> ();
-            gameOverText = new ViewText("Game Over Text");
-            scoreText = new ViewText("Score Text");
-            restartText = new ViewText("Restart Text");
         }
 
 
