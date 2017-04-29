@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using System.Collections;
 using System;
-using System.Collections.Generic;
 
 public class Controller : MonoBehaviour
 {
@@ -12,14 +10,12 @@ public class Controller : MonoBehaviour
     Func<bool, bool> NOT_OPERATOR = (a) => !a;
     Func<bool, bool> NO_OPERATOR = (a) => a;
 
-    //View.PlayerSpaceship playerSpaceship;
-
     void Start()
     {
         model = new Model.Model();
         view = new View.View();
-        view.AddPlayerSpaceship(model.player.spaceship.gameObject.transform);
-        print(model.player.spaceship.gameObject.transform);
+        view.AddPlayerCharacter(model.player.character.gameObject.transform);
+        print(model.player.character.gameObject.transform);
         BuildLevel();
 
         view.OnMove += MoveEvent;
@@ -80,21 +76,21 @@ public class Controller : MonoBehaviour
         {
             int transx = 0;
             int transz = 0;
-            if (model.player.spaceship.rigidbody.position.x > model.blinkMonster.rigidbody.position.x)
+            if (model.player.character.rigidbody.position.x > model.blinkMonster.rigidbody.position.x)
                 transx = 1;
-            else if (model.player.spaceship.rigidbody.position.x < model.blinkMonster.rigidbody.position.x)
+            else if (model.player.character.rigidbody.position.x < model.blinkMonster.rigidbody.position.x)
                 transx = -1;
-            if (model.player.spaceship.rigidbody.position.z > model.blinkMonster.rigidbody.position.z)
+            if (model.player.character.rigidbody.position.z > model.blinkMonster.rigidbody.position.z)
                 transz = 1;
-            else if (model.player.spaceship.rigidbody.position.z < model.blinkMonster.rigidbody.position.z)
+            else if (model.player.character.rigidbody.position.z < model.blinkMonster.rigidbody.position.z)
                 transz = -1;
             model.blinkMonster.rigidbody.transform.Translate(transx, 0, transz);
         }
 
-        if (model.blinkMonster != null && model.blinkMonster.rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= 1.4 &&
-                model.blinkMonster.rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -1.4 &&
-                model.blinkMonster.rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= 1 &&
-                model.blinkMonster.rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -1)
+        if (model.blinkMonster != null && model.blinkMonster.rigidbody.position.z - model.player.character.rigidbody.position.z <= 1.4 &&
+                model.blinkMonster.rigidbody.position.z - model.player.character.rigidbody.position.z >= -1.4 &&
+                model.blinkMonster.rigidbody.position.x - model.player.character.rigidbody.position.x <= 1 &&
+                model.blinkMonster.rigidbody.position.x - model.player.character.rigidbody.position.x >= -1)
             GameOver();
 
             for (int i = 0; i < model.teleportPlatform.Count; i++)
@@ -103,12 +99,12 @@ public class Controller : MonoBehaviour
             //check if difference between the two obj.position.x between 0.5 and -0.5
             float sizex = 1;
             float sizez = 1.4f;
-            if (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= sizez &&
-                model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -sizez && 
-                model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= sizex &&
-                model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
+            if (model.teleportPlatform[i].rigidbody.position.z - model.player.character.rigidbody.position.z <= sizez &&
+                model.teleportPlatform[i].rigidbody.position.z - model.player.character.rigidbody.position.z >= -sizez && 
+                model.teleportPlatform[i].rigidbody.position.x - model.player.character.rigidbody.position.x <= sizex &&
+                model.teleportPlatform[i].rigidbody.position.x - model.player.character.rigidbody.position.x >= -sizex)
             {
-                model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+                model.player.character.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
                 Camera.main.transform.position = new Vector3(model.teleportPlatform[i].camera_x, 20, model.teleportPlatform[i].camera_z);
             } 
         }
@@ -117,7 +113,7 @@ public class Controller : MonoBehaviour
         //Check if player is grounded on a platform
         for (int i = 0; i < model.platform.Count; i++)
         {
-            if (model.player.spaceship.CollisionDetection(model.platform[i].collider, NO_OPERATOR))
+            if (model.player.character.CollisionDetection(model.platform[i].collider, NO_OPERATOR))
             {
                 view.grounded = true;
             }
@@ -125,35 +121,35 @@ public class Controller : MonoBehaviour
         //Check if player is grounded on a moving platform
         for (int i = 0; i < model.movingPlatform.Count; i++)
         {
-            if (model.player.spaceship.CollisionDetection(model.movingPlatform[i].collider, NO_OPERATOR))
+            if (model.player.character.CollisionDetection(model.movingPlatform[i].collider, NO_OPERATOR))
             {
                 view.grounded = true;
-                model.player.spaceship.rigidbody.transform.parent = model.movingPlatform[i].rigidbody.transform;
+                model.player.character.rigidbody.transform.parent = model.movingPlatform[i].rigidbody.transform;
             }
-            if (model.player.spaceship.CollisionDetection(model.movingPlatform[i].collider, NOT_OPERATOR))
+            if (model.player.character.CollisionDetection(model.movingPlatform[i].collider, NOT_OPERATOR))
             {
-                model.player.spaceship.rigidbody.transform.parent = null;
+                model.player.character.rigidbody.transform.parent = null;
             }
         }
 
         //Check if the player is grounded on a magic platform
         for (int i = 0 ; i < model.magicPlatform.Count; i++ )
         {
-            if( model.player.spaceship.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
+            if( model.player.character.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
             {
                 view.grounded = true;
-                model.player.spaceship.rigidbody.transform.parent = model.magicPlatform[i].rigidbody.transform;
+                model.player.character.rigidbody.transform.parent = model.magicPlatform[i].rigidbody.transform;
             }
-            if( model.player.spaceship.CollisionDetection(model.magicPlatform[i].collider, NOT_OPERATOR))
+            if( model.player.character.CollisionDetection(model.magicPlatform[i].collider, NOT_OPERATOR))
             {
-                model.player.spaceship.rigidbody.transform.parent = null;
+                model.player.character.rigidbody.transform.parent = null;
             }            
         }
 
         //Check if player is grounded on a teleport platform
         for (int i = 0; i < model.magicPlatform.Count; i++)
         {
-            if (model.player.spaceship.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
+            if (model.player.character.CollisionDetection(model.magicPlatform[i].collider, NO_OPERATOR))
             {
                 view.grounded = true;
             }
@@ -161,11 +157,11 @@ public class Controller : MonoBehaviour
 
         
         // Check if the player has grounded on the bottom platform
-        /*if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
+        /*if(model.player.character.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
         {
             view.grounded = true;
         }
-        if(model.player.spaceship.CollisionDetection(model.platform[0].GetCollider(), NOT_OPERATOR))
+        if(model.player.character.CollisionDetection(model.platform[0].GetCollider(), NOT_OPERATOR))
         {
             view.grounded = false;
         }*/
@@ -175,13 +171,13 @@ public class Controller : MonoBehaviour
         //End the game if the player touches a pike
         for (int i = 0; i < model.pikes.Count; i++)
         {
-            if (model.player.spaceship.CollisionDetection(model.pikes[i].GetCollider(), NO_OPERATOR))
+            if (model.player.character.CollisionDetection(model.pikes[i].GetCollider(), NO_OPERATOR))
                 GameOver();
         }
 
 
    
-        //UpdateView(model.player.spaceship.gameObject, view.playerSpaceship.gameObject);
+        //UpdateView(model.player.character.gameObject, view.playercharacter.gameObject);
 
    }
     
@@ -211,14 +207,14 @@ public class Controller : MonoBehaviour
         //float moveSpeed = 1.0f;
         //Update player position by input
         //print("Player moved");
-        //model.player.spaceship.rigidbody.velocity = e.position * 10;
-        //model.player.spaceship.position.y = 0;
-        model.player.spaceship.rigidbody.velocity = new Vector3(e.velocity.x * 10, 0, e.velocity.z);
-        //model.player.spaceship.rigidbody.transform.Translate( new Vector3(e.velocity.x / 4, 0, e.velocity.z));
-        //model.player.spaceship.rigidbody.AddForce(e.force);
-        //model.player.spaceship.rigidbody.velocity = e.force;
-        //model.player.spaceship.rigidbody.transform.Translate(Vector3.right * e.position.x / 10 );
-        //model.player.spaceship.rigidbody.useGravity = true;
+        //model.player.character.rigidbody.velocity = e.position * 10;
+        //model.player.character.position.y = 0;
+        model.player.character.rigidbody.velocity = new Vector3(e.velocity.x * 10, 0, e.velocity.z);
+        //model.player.character.rigidbody.transform.Translate( new Vector3(e.velocity.x / 4, 0, e.velocity.z));
+        //model.player.character.rigidbody.AddForce(e.force);
+        //model.player.character.rigidbody.velocity = e.force;
+        //model.player.character.rigidbody.transform.Translate(Vector3.right * e.position.x / 10 );
+        //model.player.character.rigidbody.useGravity = true;
     }
 
     private void ThinkEvent(object sender, EventArgs e)
@@ -230,10 +226,10 @@ public class Controller : MonoBehaviour
         {
             float sizex = 5;
             float sizez = 5;
-            if (model.magicPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -sizez &&
-             model.magicPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= sizez &&
-             model.magicPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= sizex &&
-             model.magicPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
+            if (model.magicPlatform[i].rigidbody.position.z - model.player.character.rigidbody.position.z >= -sizez &&
+             model.magicPlatform[i].rigidbody.position.z - model.player.character.rigidbody.position.z <= sizez &&
+             model.magicPlatform[i].rigidbody.position.x - model.player.character.rigidbody.position.x <= sizex &&
+             model.magicPlatform[i].rigidbody.position.x - model.player.character.rigidbody.position.x >= -sizex)
             {
                 //0 == Horizontal from left to right
                 //1 == Horizontal from right to left.
@@ -328,7 +324,7 @@ public class Controller : MonoBehaviour
                         model.magicPlatform[i].right = true;
                     }
                 }
-                    //model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
+                    //model.player.character.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
             }
         }
     }
@@ -354,7 +350,7 @@ public class Controller : MonoBehaviour
         Camera.main.transform.position = new Vector3(10, 15, 10);
         Camera.main.orthographicSize = 20;
         //Change player's starting position
-        model.player.spaceship.rigidbody.position = new Vector3(0, 0, 8);
+        model.player.character.rigidbody.position = new Vector3(0, 0, 8);
         //min x= -2 max x =20
         //min z = -2 max z = 16
         //framework for level
@@ -445,18 +441,18 @@ public class Controller : MonoBehaviour
 
     private void JumpEvent(object sender, View.PlayerInput e)
     {
-        float JumpSpeed = 2.0f;
+        // float JumpSpeed = 2.0f;
         /*
-        if(model.player.spaceship.grounded )
+        if(model.player.character.grounded )
         {
-            model.player.spaceship.rigidbody.AddForce(Vector3.forward * JumpSpeed);
-            model.player.spaceship.grounded = false;
+            model.player.character.rigidbody.AddForce(Vector3.forward * JumpSpeed);
+            model.player.character.grounded = false;
         }*/
 
 
         if (!view.jumpTriggered)
         {
-            //model.player.spaceship.rigidbody.AddRelativeForce(0, 0, -10, ForceMode.Acceleration);
+            //model.player.character.rigidbody.AddRelativeForce(0, 0, -10, ForceMode.Acceleration);
             view.jumpTriggered = true;
         }
 
@@ -465,13 +461,13 @@ public class Controller : MonoBehaviour
         {
             view.grounded = false;
             //view.jumping = false;
-            //model.player.spaceship.rigidbody.AddForce(0, 0, 5, ForceMode.Impulse);
-            //model.player.spaceship.rigidbody.transform.Translate(Vector3.forward * JumpSpeed);
-            model.player.spaceship.rigidbody.AddForce(e.velocity);
-            model.player.spaceship.rigidbody.transform.parent = null;
+            //model.player.character.rigidbody.AddForce(0, 0, 5, ForceMode.Impulse);
+            //model.player.character.rigidbody.transform.Translate(Vector3.forward * JumpSpeed);
+            model.player.character.rigidbody.AddForce(e.velocity);
+            model.player.character.rigidbody.transform.parent = null;
         }
 
-        //playerSpaceship.gameObject.GetComponent<Rigidbody>().AddForce(0, 50, 0, ForceMode.Impulse);
+        //playerCharacter.gameObject.GetComponent<Rigidbody>().AddForce(0, 50, 0, ForceMode.Impulse);
     }
     /*private void UpdateView(GameObject model, GameObject view)
     {

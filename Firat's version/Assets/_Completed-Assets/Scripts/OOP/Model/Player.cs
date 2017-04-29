@@ -3,11 +3,11 @@ namespace Model
 {
     public class Player
     {
-        public PlayerSpaceship spaceship;
+        public PlayerCharacter character;
 
         public Player()
         {
-            spaceship = new PlayerSpaceship();
+            character = new PlayerCharacter();
         }
     }
 }

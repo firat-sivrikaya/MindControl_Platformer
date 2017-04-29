@@ -27,36 +27,13 @@ namespace Model
 			movingPlatform = new List<MovingPlatform> ();
 			magicPlatform = new List<MagicPlatform> ();
             pikes = new List<Pike>();
-           // ResetHazards();
         }
-/*
-        public void ResetHazards()
-        {
-            hazards = new List<IHazard>();
-        }
-
-        public void RemoveEnemy(int i)
-        {
-            hazards.RemoveAt(i);
-        }
-            
-        public void AddEnemySpaceship()
-        {
-            hazards.Add(new EnemySpaceship());
-            Set(hazards.Count - 1);  
-        }*/
 
         public void AddMonster(int x, int y)
         {
             blinkMonster = new BlinkMonster(x, y);
             SetMonster();
         }
-/*
-        public void AddAsteroid(int kind)
-        {
-            hazards.Add(new Asteroid(kind));
-            Set(hazards.Count - 1);
-        }*/
 
 		public void AddTeleportPlatform(int length, int width, int x, int z, int destx, int desty, int camx, int camz)
 		{

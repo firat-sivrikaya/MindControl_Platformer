@@ -2,9 +2,9 @@
 
 namespace Model
 {
-    public class PlayerSpaceship : Spaceship
+    public class PlayerCharacter : GameObjectBase
     {
-        public PlayerSpaceship()
+        public PlayerCharacter()
         {
             LoadPrefab("Done_Player");
             Instantiate();

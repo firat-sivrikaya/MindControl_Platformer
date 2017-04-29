@@ -20,7 +20,7 @@ namespace View
 		public event EventHandler<PlayerInput> OnJump;
         public event EventHandler<EventArgs> OnThink;
 
-        public PlayerSpaceship playerSpaceship;
+        public PlayerCharacter playerCharacter;
         public BlinkMonster blinkMonster;
       //  public List<object> hazards;
 		public List<TeleportPlatform> teleportPlatforms;
@@ -40,7 +40,6 @@ namespace View
         public View()
         {
             grounded = false;
-         //   hazards = new List<object>();
             platforms = new List<Platform>();
             pikes = new List<Pike>();
 			teleportPlatforms = new List<TeleportPlatform> ();
@@ -55,7 +54,6 @@ namespace View
         public void Update()
         {
             float SpeedHorizontal = 0.70f;
-           // if (OnShoot != null && Input.GetButton("Fire1")) OnShoot(this, EventArgs.Empty);
 
             if (OnRestart != null && Input.GetKeyDown(KeyCode.R)) OnRestart(this, EventArgs.Empty);
 
@@ -78,7 +76,7 @@ namespace View
             }
             if (OnMove != null)
             {
-                Vector3 newForce, newVelocity;
+                Vector3 newVelocity;
 
                 newVelocity = new Vector3(Input.GetAxis("Horizontal") * SpeedHorizontal, 0.0f);
                 if (playerInput.velocity != newVelocity)
@@ -103,14 +101,9 @@ namespace View
 
         }
 
-     /*   public bool ShootEventSubscribed()
+        public void AddPlayerCharacter(Transform modelTransform)
         {
-            return (OnShoot == null) ? false : true; 
-        }*/
-
-        public void AddPlayerSpaceship(Transform modelTransform)
-        {
-            playerSpaceship = new PlayerSpaceship(modelTransform);
+            playerCharacter = new PlayerCharacter(modelTransform);
         }
 
         public void AddBlinkMonster(Transform modelTransform)
@@ -142,19 +135,5 @@ namespace View
         {
             pikes.Add(new Pike(modelTransform));
         }
-
-      /*  public void AddEnemySpaceship(int kind, Transform modelTransform)
-        {
-            hazards.Add(new EnemySpaceship(kind));
-            EnemySpaceship enemySpaceship = (EnemySpaceship)hazards[hazards.Count - 1];
-            enemySpaceship.Instantiate(modelTransform);
-        }
-
-        public void AddAsteroid(int kind, Transform modelTransform)
-        {
-            hazards.Add(new Asteroid(kind));
-            Asteroid asteroid = (Asteroid)hazards[hazards.Count - 1];
-            asteroid.Instantiate(modelTransform);
-        }*/
     }
 }
