@@ -96,8 +96,19 @@ public class Controller : MonoBehaviour
                 model.teleportPlatform[i].rigidbody.position.x - model.player.character.rigidbody.position.x <= sizex &&
                 model.teleportPlatform[i].rigidbody.position.x - model.player.character.rigidbody.position.x >= -sizex)
             {
+                // Check if the player has reached the final teleporter
+                if (model.teleportPlatform[model.teleportPlatform.Count - 1].rigidbody.position.z - model.player.character.rigidbody.position.z <= sizez &&
+                    model.teleportPlatform[model.teleportPlatform.Count - 1].rigidbody.position.z - model.player.character.rigidbody.position.z >= -sizez && 
+                    model.teleportPlatform[model.teleportPlatform.Count - 1].rigidbody.position.x - model.player.character.rigidbody.position.x <= sizex &&
+                    model.teleportPlatform[model.teleportPlatform.Count - 1].rigidbody.position.x - model.player.character.rigidbody.position.x >= -sizex)
+                    {
+                        GameOver();
+                        Camera.main.transform.position = new Vector3(-40, 20, -200);
+                        return;
+                    }
                 model.player.character.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
                 Camera.main.transform.position = new Vector3(model.teleportPlatform[i].camera_x, 20, model.teleportPlatform[i].camera_z);
+
             } 
         }
 
@@ -142,13 +153,13 @@ public class Controller : MonoBehaviour
                     model.player.character.rigidbody.transform.parent = null;
             }            
         }
-
+        /* 
         // Move the camera to congratz screen if the player achieves to get to last teleport
         if(model.player.character.CollisionDetection(model.teleportPlatform[model.teleportPlatform.Count - 1].collider, NO_OPERATOR))
         {
             GameOver();
             Camera.main.transform.position = new Vector3(-40, 20, -200);
-        }
+        }*/
         
         // Check if the player has grounded on the bottom platform
         /*if(model.player.character.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
@@ -338,11 +349,10 @@ public class Controller : MonoBehaviour
         //min x= -2 max x =20
         //min z = -2 max z = 16
         //framework for level
-        model.AddPlatform(21, 1, 9, -2);//floor
+        model.AddPike(21, 1, 9, -2);//floor
         model.AddPlatform(1, 19, -2, 7);//left wall
         model.AddPlatform(1, 19, 20, 7);//right wall
         model.AddPlatform(21, 1, 9, 16);//ceilling
-
         //other platform
         model.AddPlatform(3, 1, 0, 6);//start platform
         //model.AddPlatform(10, 1, 12, 7);//middle one
@@ -374,7 +384,7 @@ public class Controller : MonoBehaviour
         //min z = 48 max z = 66
 
         //framework for level
-        model.AddPlatform(21, 1, 59, 48);//ground
+        model.AddPike(21, 1, 59, 48);//ground
         model.AddPlatform(1, 19, 48, 57);//left wall
         model.AddPlatform(1, 19, 70, 57);//right wall
         model.AddPlatform(21, 1, 59, 66);//ceiling
@@ -386,15 +396,20 @@ public class Controller : MonoBehaviour
         model.AddPlatform(3, 1, 60, 62);//to jump on the last one
         model.AddPlatform(2, 1, 55, 60);//below the teleporter
 
+
+        //Pike platforms
+        model.AddPike(1, 4, 54, 50); //down left corner pike
+        model.AddPike(1, 5, 69, 51); //down right corner pike
+        model.AddPike(1, 2, 56, 65); //ceiling pike
         //Moving platform
         model.AddMovingPlatform(3, 1, 58, 50, 0, 3);//post pike platform
         model.AddMovingPlatform(3, 1, 64, 56, 1, 3);//elevator platform
 
         //Magic Platform
-        model.AddMagicPlatform(1, 1, 55, 62, 0, 2);//blocking teleporter
+        model.AddMagicPlatform(2, 1, 55, 64, 0, 3);//blocking teleporter
 
         //Teleporter
-        model.AddTeleportPlatform(1, 1, 55, 63, 50, 60, 50, 60); //fake coordinate for now
+        model.AddTeleportPlatform(1, 1, 55, 65, 50, 60, 50, 60); //fake coordinate for now
 
         for (int i = 0; i < model.platform.Count; i++)
         {
@@ -440,15 +455,18 @@ public class Controller : MonoBehaviour
             view.jumpTriggered = true;
         }
 
-        print("Player jumped");
+        
         if (view.grounded)
         {
+            
             view.grounded = false;
             //view.jumping = false;
             //model.player.character.rigidbody.AddForce(0, 0, 5, ForceMode.Impulse);
             //model.player.character.rigidbody.transform.Translate(Vector3.forward * JumpSpeed);
             model.player.character.rigidbody.AddForce(e.velocity);
+            print("Player jumped");
             model.player.character.rigidbody.transform.parent = null;
+            view.jumping = false;
         }
 
         //playerCharacter.gameObject.GetComponent<Rigidbody>().AddForce(0, 50, 0, ForceMode.Impulse);

@@ -43,6 +43,7 @@ namespace View
 			teleportPlatforms = new List<TeleportPlatform> ();
 			movingPlatforms = new List<MovingPlatform> ();
 			magicPlatforms = new List<MagicPlatform> ();
+            jumping = false;
         }
 
 
@@ -54,20 +55,16 @@ namespace View
 
             if (OnThink != null && Input.GetKeyDown(KeyCode.T)) OnThink(this, EventArgs.Empty);
 
-            if (OnJump != null && Input.GetKeyDown(KeyCode.Space))
+            if (OnJump != null && Input.GetKeyDown(KeyCode.Space) )
             {
-
                 jumping = true;
-                jumpTriggered = false;
+                //jumpTriggered = false;
                 Vector3 newVelocity = new Vector3(Input.GetAxis("Horizontal") * SpeedHorizontal, 0.0f, 500.0f);
                 if (playerInput.velocity != newVelocity)
                 {
                     playerInput.velocity = newVelocity;
                     OnJump(this, playerInput);
                 }
-
-                Console.WriteLine("Jump triggered");
-
             }
             if (OnMove != null)
             {
