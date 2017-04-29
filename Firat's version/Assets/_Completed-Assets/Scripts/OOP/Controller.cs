@@ -12,13 +12,6 @@ public class Controller : MonoBehaviour
     Func<bool, bool> NOT_OPERATOR = (a) => !a;
     Func<bool, bool> NO_OPERATOR = (a) => a;
 
-  /* public int hazardCount;
-    public float spawnWait;
-    public float startWait;
-    public float waveWait;
-
-    public List<int> removeHazards;
-    */
     //View.PlayerSpaceship playerSpaceship;
 
     void Start()
@@ -28,9 +21,7 @@ public class Controller : MonoBehaviour
         view.AddPlayerSpaceship(model.player.spaceship.gameObject.transform);
         print(model.player.spaceship.gameObject.transform);
         BuildLevel();
-   
-        //removeHazards = new List<int>();
-        //view.ShootEvent += ShootEvent;
+
         view.OnMove += MoveEvent;
         view.OnJump += JumpEvent;
         view.OnThink += ThinkEvent;
@@ -39,7 +30,6 @@ public class Controller : MonoBehaviour
         view.gameOverText.gUIText.text = "";
         model.score = 0;
         UpdateScore();
-        //StartCoroutine(SpawnWaves());
     }
 
     void FixedUpdate()
@@ -55,52 +45,29 @@ public class Controller : MonoBehaviour
         }
 
         //Hazard control
-        //checker les plates formes mouvantes
+        //Make platform move
         for (int i = 0; i < model.movingPlatform.Count; i++)
         {
             if (model.movingPlatform[i]._direction == 0)
             {
 
                 if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.x <= model.movingPlatform[i].origin_x + model.movingPlatform[i]._amplitude)
-                {
-                   // print("moving right");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.01f, 0.0f, 0.0f));
-                    //  model.movingPlatform[i].position += new Vector3(0.1f, 0, 0);
-                }
-                //if platform goes to the right and is at the good place or too far, invert direction
                 else if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.x >= model.movingPlatform[i].origin_x + model.movingPlatform[i]._amplitude)
-                {
-                  //  print("stoping!!!");
                     model.movingPlatform[i].right = false;
-                }
                 else if (model.movingPlatform[i].right == false && model.movingPlatform[i].rigidbody.position.x >= model.movingPlatform[i].origin_x)
-                {
-                  //  print("moving left");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(-0.01f, 0.0f, 0.0f));
-                }
                 else if (model.movingPlatform[i].rigidbody.position.x <= model.movingPlatform[i].origin_x)
-                {
                     model.movingPlatform[i].right = true;
-                }
             }
             else
             {
                 if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.z <= model.movingPlatform[i].origin_z + model.movingPlatform[i]._amplitude)
-                {
-                  //  print("moving right");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, 0.01f));
-                }
-                //if platform goes to the right and is at the good place or too far, invert direction
                 else if (model.movingPlatform[i].right == true && model.movingPlatform[i].rigidbody.position.z >= model.movingPlatform[i].origin_z + model.movingPlatform[i]._amplitude)
-                {
-                   // print("stoping!!!");
                     model.movingPlatform[i].right = false;
-                }
                 else if (model.movingPlatform[i].right == false && model.movingPlatform[i].rigidbody.position.z >= model.movingPlatform[i].origin_z)
-                {
-                   // print("moving left");
                     model.movingPlatform[i].rigidbody.transform.Translate(new Vector3(0.00f, 0.0f, -0.01f));
-                }
                 else if (model.movingPlatform[i].rigidbody.position.z <= model.movingPlatform[i].origin_z)
                 {
                     model.movingPlatform[i].right = true;
@@ -122,22 +89,16 @@ public class Controller : MonoBehaviour
             else if (model.player.spaceship.rigidbody.position.z < model.blinkMonster.rigidbody.position.z)
                 transz = -1;
             model.blinkMonster.rigidbody.transform.Translate(transx, 0, transz);
-            print("moved");
         }
 
         if (model.blinkMonster != null && model.blinkMonster.rigidbody.position.z - model.player.spaceship.rigidbody.position.z <= 1.4 &&
                 model.blinkMonster.rigidbody.position.z - model.player.spaceship.rigidbody.position.z >= -1.4 &&
                 model.blinkMonster.rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= 1 &&
                 model.blinkMonster.rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -1)
-        {
             GameOver();
-        }
-
 
             for (int i = 0; i < model.teleportPlatform.Count; i++)
         {
-           // print("x axis : " + (model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x));
-           // print("z axis :  " + (model.teleportPlatform[i].rigidbody.position.z - model.player.spaceship.rigidbody.position.z));
             //check if collision or if "in contact" so If less than 1 between
             //check if difference between the two obj.position.x between 0.5 and -0.5
             float sizex = 1;
@@ -147,23 +108,12 @@ public class Controller : MonoBehaviour
                 model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x <= sizex &&
                 model.teleportPlatform[i].rigidbody.position.x - model.player.spaceship.rigidbody.position.x >= -sizex)
             {
-                print("Beam me up Scotty");
-                //how to put the cam in the center of the new level?
                 model.player.spaceship.rigidbody.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
-                //Camera.main.transform.position = new Vector3(model.teleportPlatform[i].destination_x, 20, model.teleportPlatform[i].destination_z);
                 Camera.main.transform.position = new Vector3(model.teleportPlatform[i].camera_x, 20, model.teleportPlatform[i].camera_z);
-                // GetComponent<Camera>().transform.position = new Vector3(model.teleportPlatform[i].destination_x, 0, model.teleportPlatform[i].destination_z);
             } 
         }
 
         //Player/platform control
-        //Destroy bolts that exits the boundary
-       /* for (int j = 0; j < model.player.spaceship.cannon.bolts.Count; j++)
-        {
-            if (model.player.spaceship.cannon.bolts[j].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
-                model.player.spaceship.cannon.DestroyBolt(j);
-        }
-        */
         //Check if player is grounded on a platform
         for (int i = 0; i < model.platform.Count; i++)
         {
@@ -230,210 +180,10 @@ public class Controller : MonoBehaviour
         }
 
 
-    /*    for (int i = 0; i < model.hazards.Count; i++)
-        {
-            if (model.hazards[i].GetCollider() != null)
-            {
-                if (model.hazards[i].GetType() == typeof(Model.EnemySpaceship))
-                {
-                    Model.EnemySpaceship enemySpaceship = (Model.EnemySpaceship)model.hazards[i];
-
-                    //Player/Enemy Spaceship bolts collision
-                    for (int j = 0; j < enemySpaceship.GetCannon().bolts.Count; j++)
-                    {
-                        if (model.player.spaceship.CollisionDetection(enemySpaceship.GetCannon().bolts[j].collider, NO_OPERATOR))
-                        {
-                            Transform modelTransform = model.player.spaceship.gameObject.transform;
-                            view.playerSpaceship.explosion.Explode(modelTransform.position, modelTransform.rotation);
-                            GameOver();
-                            break;
-                        }
-
-                        //Enemy Spaceship bolts/Boundary collision
-                        if (enemySpaceship.GetCannon().bolts[j].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
-                            enemySpaceship.GetCannon().DestroyBolt(j);
-                    }
-
-                    //Enemy spaceship control
-                    if (Time.time > enemySpaceship.nextMove.x)
-                    {
-                        enemySpaceship.nextMove.x = Time.time + enemySpaceship.moveRate.x;
-                        enemySpaceship.targetManeuver = (enemySpaceship.kind == 0 ? UnityEngine.Random.Range(7, 10) : UnityEngine.Random.Range(4, 6)) * -Mathf.Sign(gameObject.transform.position.x);
-                        enemySpaceship.moveRate.x = UnityEngine.Random.Range(enemySpaceship.moveRateMin, enemySpaceship.moveRateMax);
-                    }
-
-                    if (Time.time > enemySpaceship.nextMove.y)
-                    {
-                        enemySpaceship.nextMove.y = Time.time + enemySpaceship.moveRate.y;
-                        enemySpaceship.targetManeuver = (enemySpaceship.kind == 0 ? UnityEngine.Random.Range(5, 8) : UnityEngine.Random.Range(0, 3)) * -Mathf.Sign(gameObject.transform.position.x);
-                        enemySpaceship.moveRate.y = UnityEngine.Random.Range(enemySpaceship.moveRateMin, enemySpaceship.moveRateMax);
-                    }
-
-                    float newManeuver = Mathf.MoveTowards(enemySpaceship.rigidbody.velocity.x, enemySpaceship.targetManeuver, 7.5f * Time.deltaTime);
-                    enemySpaceship.rigidbody.velocity = new Vector3(newManeuver, 0.0f, enemySpaceship.rigidbody.velocity.z);
-
-
-                    if (enemySpaceship.rigidbody != null)
-                        enemySpaceship.rigidbody.rotation = Quaternion.Euler(0.0f, 0.0f, enemySpaceship.rigidbody.velocity.x * -7f);
-
-                    if (Time.time > enemySpaceship.cannon.nextFire)
-                    {
-                        enemySpaceship.cannon.nextFire = Time.time + enemySpaceship.cannon.fireRate;
-                        enemySpaceship.cannon.Fire();
-                        View.EnemySpaceship enemySpaceshipView = (View.EnemySpaceship)view.hazards[i];
-                        enemySpaceshipView.NewBolt(enemySpaceship.cannon.bolts[enemySpaceship.cannon.bolts.Count - 1].gameObject.transform);
-                    }
-                }
-                else
-                {
-                    //Asteroid control
-                    Model.Asteroid asteroid = (Model.Asteroid)model.hazards[i];
-
-                    asteroid.eulerAngles.x += Time.deltaTime * asteroid.rotationSpeed.x;
-                    asteroid.eulerAngles.y += Time.deltaTime * asteroid.rotationSpeed.y;
-                    asteroid.eulerAngles.z += Time.deltaTime * asteroid.rotationSpeed.z;
-
-                    if (asteroid.gameObject != null)
-                        asteroid.gameObject.transform.eulerAngles = asteroid.eulerAngles;
-                }
-
-                //Flag hazard for deletion by exit of boundary
-                if (model.hazards[i].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
-                {
-                    removeHazards.Add(i);
-                }
-
-                //Player/Hazard collision
-                if (model.player.spaceship.CollisionDetection(model.hazards[i].GetCollider(), NO_OPERATOR))
-                {
-                    Transform modelTransform = model.player.spaceship.gameObject.transform;
-                    view.playerSpaceship.explosion.Explode(modelTransform.position, modelTransform.rotation);
-
-                    modelTransform = model.hazards[i].GetGameObject().transform;
-                    if (view.hazards[i].GetType() == typeof(View.EnemySpaceship))
-                    {
-                        View.EnemySpaceship enemySpaceship = (View.EnemySpaceship)view.hazards[i];
-                        enemySpaceship.explosion.Explode(modelTransform.position, modelTransform.rotation);
-                    }
-                    else if (view.hazards[i].GetType() == typeof(View.Asteroid))
-                    {
-                        View.Asteroid asteroid = (View.Asteroid)view.hazards[i];
-                        asteroid.explosion.Explode(modelTransform.position, modelTransform.rotation);
-                    }
-
-                    model.hazards[i].Destroy();
-                    removeHazards.Add(i);
-
-                    GameOver();
-                    break;
-                }
-
-                //Hazards/Player bolts collision 
-                for (int j = 0; j < model.player.spaceship.cannon.bolts.Count; j++)
-                {
-                    model.player.spaceship.cannon.bolts[j].CollisionDetection(model.hazards[i].GetCollider(), NO_OPERATOR);
-
-                    if (model.hazards[i].CollisionDetection(model.player.spaceship.cannon.bolts[j].GetCollider(), NO_OPERATOR))
-                    {
-                        Transform modelTransform = model.hazards[i].GetGameObject().transform;
-                        if (view.hazards[i].GetType() == typeof(View.EnemySpaceship))
-                        {
-                            View.EnemySpaceship enemySpaceship = (View.EnemySpaceship)view.hazards[i];
-                            enemySpaceship.explosion.Explode(modelTransform.position, modelTransform.rotation);
-                        }
-                        else if (view.hazards[i].GetType() == typeof(View.Asteroid))
-                        {
-                            View.Asteroid asteroid = (View.Asteroid)view.hazards[i];
-                            asteroid.explosion.Explode(modelTransform.position, modelTransform.rotation);
-                        }
-
-                        AddScore(model.hazards[i].GetPoints());
-                        model.player.spaceship.cannon.DestroyBolt(j);
-                    }
-                }
-            }
-        }
-
-        //Player control
-        //Destroy bolts that exits the boundary
-        for (int j = 0; j < model.player.spaceship.cannon.bolts.Count; j++)
-        {
-            if (model.player.spaceship.cannon.bolts[j].CollisionDetection(model.boundary.collider, NOT_OPERATOR))
-                model.player.spaceship.cannon.DestroyBolt(j);
-        }
-        */
-       /* 
-        if(model.player.spaceship.CollisionDetection(model.platform[0].collider, NO_OPERATOR))
-            print("YEY!");*/
-
-        /*
-        if (!model.gameOver)
-        {
-            //Clamp player within the screen
-            model.player.spaceship.rigidbody.position = new Vector3(
-                Mathf.Clamp(model.player.spaceship.rigidbody.position.x, model.player.spaceship.boundary.x, model.player.spaceship.boundary.y),
-                0.0f,
-                Mathf.Clamp(model.player.spaceship.rigidbody.position.z, model.player.spaceship.boundary.z, model.player.spaceship.boundary.w)
-            );
-
-            //Roll player spaceship by sideways velocity
-            model.player.spaceship.rigidbody.rotation = Quaternion.Euler(0.0f, 0.0f, model.player.spaceship.rigidbody.velocity.x * -7f);
-        }
-        */
-        //Subscribe the ShootEvent ones when possible to fire
-      /*  if (!view.ShootEventSubscribed() && Time.time > model.player.spaceship.cannon.nextFire)
-        {
-            view.OnShoot += ShootEvent;
-        }
-
+   
         //UpdateView(model.player.spaceship.gameObject, view.playerSpaceship.gameObject);
 
-        //Destroy hazards flagged for destroy
-        foreach (int i in removeHazards)
-        {
-            model.hazards[i].Destroy();
-        }
-
-        //Reset destroy flag list
-        removeHazards = new List<int>();
-    }*/
-
-    /* 
-    //Hazard spawn proces
-    IEnumerator SpawnWaves()
-    {
-        yield return new WaitForSeconds(startWait);
-
-        while (true)
-        {
-            for (int i = 0; i < hazardCount; i++)
-            {
-                int random = UnityEngine.Random.Range(0, 4);
-
-                if (random == 3)
-                {
-                    model.AddEnemySpaceship();
-                    int j = model.hazards.Count - 1;
-                    view.AddEnemySpaceship(model.hazards[j].GetKind(), model.hazards[j].GetGameObject().transform);
-                }
-                else
-                {
-                    model.AddAsteroid(random);
-                    int j = model.hazards.Count - 1;
-                    view.AddAsteroid(random, model.hazards[j].GetGameObject().transform);
-                }
-
-                yield return new WaitForSeconds(spawnWait);
-            }
-
-            yield return new WaitForSeconds(waveWait);
-
-            if (model.gameOver)
-            {
-                break;
-            }
-        }
-    */}
+   }
     
     public void AddScore(int newScoreValue)
     {
@@ -449,20 +199,12 @@ public class Controller : MonoBehaviour
     public void GameOver()
     {
         view.OnRestart += RestartEvent;
-       // view.OnShoot -= ShootEvent;
         view.OnMove -= MoveEvent;
         view.OnJump -= JumpEvent;
         view.gameOverText.gUIText.text = "Game Over!";
         model.gameOver = true;
     }
-    /*
-    private void ShootEvent(object sender, EventArgs e)
-    {
-        model.player.spaceship.cannon.nextFire = Time.time + model.player.spaceship.cannon.fireRate;
-        view.OnShoot -= ShootEvent;
-        model.player.spaceship.cannon.Fire();
-        view.playerSpaceship.NewBolt(model.player.spaceship.cannon.bolts[model.player.spaceship.cannon.bolts.Count - 1].gameObject.transform);
-    }*/
+
 
     private void MoveEvent(object sender, View.PlayerInput e)
     {
@@ -594,7 +336,6 @@ public class Controller : MonoBehaviour
     { 
         //Reload game scene
         view.OnRestart -= RestartEvent;
-       // view.OnShoot += ShootEvent;
         view.OnMove += MoveEvent;
         view.OnJump += JumpEvent;
         view.OnThink += ThinkEvent;
@@ -642,44 +383,6 @@ public class Controller : MonoBehaviour
 
         // Pikes
         model.AddPike(1, 5, 9, 10); //pike near second platform
-
-        //level frame
-        /* Camera.main.transform.position = new Vector3(10, 15, 10);
-         Camera.main.orthographicSize = 20;
-         model.AddMonster(5, 5);
-         view.AddBlinkMonster(model.blinkMonster.gameObject.transform);
-         //min x= -2 max x =20
-         //min z = -2 max z = 16
-         //framework for level
-         model.AddPlatform (21, 1, 9, -2);//floor
-         model.AddPlatform(1, 19, -2, 7);//left wall
-         model.AddPlatform(1, 19, 20, 7);//right wall
-         model.AddPlatform(21, 1, 9, 16);//ceilling
-
-         //other platform
-         model.AddPlatform(3, 1, 0, 6);//start platform
-         model.AddPlatform(10, 1, 12, 7);//middle one
-                                         //model.AddPlatform(5, 1,18, 7);
-                                         // model.AddPlatform(10, 1, 0, 0);
-                                         /*model.AddPlatform(10, 1, 0, 0);
-                                         model.AddPlatform(10, 1, 0, 0);
-                                         model.AddPlatform(10, 1, 0, 0);*/
-        /*  model.AddTeleportPlatform(1, 1, 5, 2, 50, 60, 59, 57);
-          /*
-                  for ( int i = 0 ; i < model.platform.Count ; i++ )
-                  {
-                      view.AddPlatform(model.platform[i].gameObject.transform);
-                  }
-
-
-
-                  for ( int i = 0 ; i < model.teleportPlatform.Count ; i++ )
-                  {
-                      view.AddTeleportPlatform(model.teleportPlatform[i].gameObject.transform);
-                  }
-
-          */
-
     }
 
     private void BuildLevel2()
